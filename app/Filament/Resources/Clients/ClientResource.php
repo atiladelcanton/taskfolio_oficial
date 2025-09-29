@@ -6,9 +6,11 @@ use App\Filament\Resources\Clients\Pages\CreateClient;
 use App\Filament\Resources\Clients\Pages\EditClient;
 use App\Filament\Resources\Clients\Pages\ListClients;
 use App\Filament\Resources\Clients\Pages\ViewClient;
+use App\Filament\Resources\Clients\RelationManagers\ProjectsRelationManager;
 use App\Filament\Resources\Clients\Schemas\ClientForm;
 use App\Filament\Resources\Clients\Schemas\ClientInfolist;
 use App\Filament\Resources\Clients\Tables\ClientsTable;
+use App\Filament\Resources\Projects\RelationManagers\ClientRelationManager;
 use App\Models\Client;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -45,7 +47,7 @@ class ClientResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
@@ -62,4 +64,5 @@ class ClientResource extends Resource
             'edit' => EditClient::route('/{record}/edit'),
         ];
     }
+
 }
