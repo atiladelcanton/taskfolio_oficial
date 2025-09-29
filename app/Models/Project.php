@@ -12,6 +12,7 @@ class Project extends Model
 
     protected $fillable = [
         'client_id',
+        'project_name',
         'payment_type',
         'payment_method',
         'payment_day',
