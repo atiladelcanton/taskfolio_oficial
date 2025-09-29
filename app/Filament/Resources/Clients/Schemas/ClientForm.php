@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Clients\Schemas;
 
 use App\Forms\Components\DocumentInput;
+use App\Forms\Components\PhoneInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -24,12 +25,12 @@ class ClientForm
                        ->label('Nome do Cliente')
                        ->required(),
                   DocumentInput::make('document')
-                      ->uniqueInTable(),
+                      ->uniqueInTable('clients'),
                    TextInput::make('email')
                        ->label('E-mail do Cliente')
                        ->email()
                        ->required(),
-                   TextInput::make('phone')
+                   PhoneInput::make('phone')
                        ->label('Telefone do Cliente')
                        ->tel()
                        ->required(),

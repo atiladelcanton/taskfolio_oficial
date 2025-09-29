@@ -48,7 +48,11 @@ class ClientResource extends Resource
             //
         ];
     }
-
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount('projects');
+    }
     public static function getPages(): array
     {
         return [

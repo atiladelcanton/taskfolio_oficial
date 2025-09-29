@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Clients\Tables;
 
 use App\Tables\Columns\DocumentColumn;
+use App\Tables\Columns\PhoneColumn;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -13,9 +14,11 @@ use Filament\Tables\Table;
 
 class ClientsTable
 {
+
     public static function configure(Table $table): Table
     {
         return $table
+
             ->columns([
                 TextColumn::make('company_name')
                     ->label('Nome da Empresa')
@@ -27,9 +30,15 @@ class ClientsTable
                 TextColumn::make('email')
                     ->label('E-mail do Cliente')
                     ->searchable(),
-                TextColumn::make('phone')
+               PhoneColumn::make('phone')
                     ->label('Telefone do Cliente')
+                   ->withColor()->withBadge()->withIcon()
                     ->searchable(),
+                TextColumn::make('projects_count')
+                    ->label('Projetos')
+                    ->sortable()
+                    ->badge()
+                    ->alignCenter(),
                 TextColumn::make('created_at')
                     ->label('Data do Cadastro')
                     ->dateTime()

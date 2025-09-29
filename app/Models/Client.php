@@ -29,7 +29,10 @@ class Client extends Model
     {
         return $this->hasMany(Project::class);
     }
-
+    public function projectsCount()
+    {
+        return $this->hasMany(Project::class)->count();
+    }
     public function clientPayments()
     {
         return $this->hasMany(ClientPayment::class);
