@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Sprints\Tables;
 
 use Filament\Actions\{BulkActionGroup, DeleteBulkAction, EditAction};
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\{Filter, SelectFilter};
 use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class SprintsTable
 {
@@ -22,16 +25,46 @@ class SprintsTable
                     ->label('Status')
                     ->collapsible(),
             ])
+            ->filters([
+                SelectFilter::make('status')
+                    ->options([
+                        'BACKLOG' => 'Aguardando',
+                        'PLANNING' => 'Planejamento',
+                        'ACTIVE' => 'Andamento',
+                        'PAUSED' => 'Pausada',
+                        'COMPLETED' => 'Concluída',
+                        'CANCELLED' => 'Cancelada',
+                    ]),
+                Filter::make('start_at')
+                    ->schema([
+                        DatePicker::make('start_at')->label('Inicio da Sprint'),
+                        DatePicker::make('end_at')->label('Fim da Sprint'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['start_at'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('start_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['end_at'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('end_at', '<=', $date),
+                            );
+                    }),
+            ])
             ->defaultGroup('project.project_name')
             ->columns([
 
                 TextColumn::make('title')
+                    ->label('Sprint')
                     ->searchable(),
                 TextColumn::make('start_at')
-                    ->dateTime()
+                    ->label('Inicio da Sprint')
+                    ->dateTime('d/m/Y')
                     ->sortable(),
                 TextColumn::make('end_at')
-                    ->dateTime()
+                    ->label('Final da Sprint')
+                    ->dateTime('d/m/Y')
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('Status')
@@ -54,17 +87,7 @@ class SprintsTable
                         'CANCELLED' => 'Cancelada',
                         default => $state,
                     }),
-                TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
+
             ])
             ->recordActions([
                 EditAction::make(),

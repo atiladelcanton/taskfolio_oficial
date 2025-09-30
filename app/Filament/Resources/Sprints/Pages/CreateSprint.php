@@ -20,7 +20,6 @@ class CreateSprint extends CreateRecord
      */
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // Valida sobreposição antes de salvar
         $overlapping = \App\Models\Sprint::hasOverlappingSprintInProject(
             $data['project_id'],
             $data['start_at'],
