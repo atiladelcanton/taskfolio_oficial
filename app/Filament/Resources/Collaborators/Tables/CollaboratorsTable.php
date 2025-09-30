@@ -8,7 +8,6 @@ use App\Tables\Columns\{DocumentColumn, PhoneColumn};
 use Filament\Actions\{ActionGroup, DeleteAction, EditAction};
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Phiki\Phast\Text;
 
 class CollaboratorsTable
 {
@@ -26,7 +25,7 @@ class CollaboratorsTable
                 PhoneColumn::make('cellphone')->label('Telefone')->searchable()->withWhatsApp()->withBadge(),
                 TextColumn::make('address')
                     ->label('Endereco')
-                    ->searchable()  ->toggleable(isToggledHiddenByDefault: true),
+                    ->searchable()->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('payment_method')
                     ->label('Pagamento')
                     ->badge(),

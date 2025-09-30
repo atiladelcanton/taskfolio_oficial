@@ -77,4 +77,40 @@ class Sprint extends Model
     {
         return $query->where('status', $status);
     }
+
+    public static function hasOverlappingSprintInProject(
+        int $projectId,
+        string $startDate,
+        string $endDate,
+        ?int $excludeSprintId = null
+    ): ?self {
+        $query = self::where('project_id', $projectId)
+            ->where(function ($query) use ($startDate, $endDate) {
+                // Verifica todas as possibilidades de sobreposição
+                $query->where(function ($q) use ($startDate, $endDate) {
+                    // Nova sprint começa durante sprint existente
+                    $q->whereBetween('start_at', [$startDate, $endDate]);
+                })
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        // Nova sprint termina durante sprint existente
+                        $q->whereBetween('end_at', [$startDate, $endDate]);
+                    })
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        // Nova sprint engloba sprint existente completamente
+                        $q->where('start_at', '>=', $startDate)
+                            ->where('end_at', '<=', $endDate);
+                    })
+                    ->orWhere(function ($q) use ($startDate, $endDate) {
+                        // Sprint existente engloba nova sprint completamente
+                        $q->where('start_at', '<=', $startDate)
+                            ->where('end_at', '>=', $endDate);
+                    });
+            });
+
+        if ($excludeSprintId) {
+            $query->where('id', '!=', $excludeSprintId);
+        }
+
+        return $query->first();
+    }
 }
