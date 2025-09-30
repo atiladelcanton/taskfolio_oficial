@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Forms\Components;
 
 use Filament\Forms\Components\TextInput;
@@ -25,7 +27,9 @@ class DocumentInput extends TextInput
 
         // Formatar ao carregar (edição)
         $this->formatStateUsing(function ($state) {
-            if (!$state) return $state;
+            if (! $state) {
+                return $state;
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -87,11 +91,11 @@ class DocumentInput extends TextInput
                 $value = preg_replace('/\D/', '', $value);
 
                 if (strlen($value) === 11) {
-                    if (!self::isValidCPF($value)) {
+                    if (! self::isValidCPF($value)) {
                         $fail('O CPF informado é inválido.');
                     }
                 } elseif (strlen($value) === 14) {
-                    if (!self::isValidCNPJ($value)) {
+                    if (! self::isValidCNPJ($value)) {
                         $fail('O CNPJ informado é inválido.');
                     }
                 } else {
@@ -107,7 +111,7 @@ class DocumentInput extends TextInput
     public function uniqueInTable(?string $table = null, ?string $column = null, bool $ignoreRecord = true): static
     {
         // Se não passar a tabela, tenta pegar do contexto do formulário
-        if (!$table) {
+        if (! $table) {
             // Será resolvido em tempo de execução pelo Filament
             $this->unique(ignoreRecord: $ignoreRecord);
         } else {
@@ -132,14 +136,18 @@ class DocumentInput extends TextInput
             $sum += (int) $cpf[$i] * (10 - $i);
         }
         $digit1 = 11 - ($sum % 11);
-        if ($digit1 > 9) $digit1 = 0;
+        if ($digit1 > 9) {
+            $digit1 = 0;
+        }
 
         $sum = 0;
         for ($i = 0; $i < 10; $i++) {
             $sum += (int) $cpf[$i] * (11 - $i);
         }
         $digit2 = 11 - ($sum % 11);
-        if ($digit2 > 9) $digit2 = 0;
+        if ($digit2 > 9) {
+            $digit2 = 0;
+        }
 
         return $digit1 == $cpf[9] && $digit2 == $cpf[10];
     }
@@ -161,11 +169,15 @@ class DocumentInput extends TextInput
 
         for ($i = $length; $i >= 1; $i--) {
             $sum += (int) $numbers[$length - $i] * $pos--;
-            if ($pos < 2) $pos = 9;
+            if ($pos < 2) {
+                $pos = 9;
+            }
         }
 
         $result = $sum % 11 < 2 ? 0 : 11 - ($sum % 11);
-        if ($result != $digits[0]) return false;
+        if ($result != $digits[0]) {
+            return false;
+        }
 
         $length = 13;
         $numbers = substr($cnpj, 0, $length);
@@ -174,10 +186,13 @@ class DocumentInput extends TextInput
 
         for ($i = $length; $i >= 1; $i--) {
             $sum += (int) $numbers[$length - $i] * $pos--;
-            if ($pos < 2) $pos = 9;
+            if ($pos < 2) {
+                $pos = 9;
+            }
         }
 
         $result = $sum % 11 < 2 ? 0 : 11 - ($sum % 11);
+
         return $result == $digits[1];
     }
 
@@ -240,8 +255,11 @@ class DocumentInput extends TextInput
         ]);
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return $state;
+            if (! $state) {
+                return $state;
+            }
             $state = preg_replace('/\D/', '', $state);
+
             return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $state);
         });
 
@@ -251,10 +269,11 @@ class DocumentInput extends TextInput
 
                 if (strlen($value) !== 11) {
                     $fail('O CPF deve ter 11 dígitos.');
+
                     return;
                 }
 
-                if (!self::isValidCPF($value)) {
+                if (! self::isValidCPF($value)) {
                     $fail('O CPF informado é inválido.');
                 }
             };
@@ -305,8 +324,11 @@ class DocumentInput extends TextInput
         ]);
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return $state;
+            if (! $state) {
+                return $state;
+            }
             $state = preg_replace('/\D/', '', $state);
+
             return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $state);
         });
 
@@ -316,10 +338,11 @@ class DocumentInput extends TextInput
 
                 if (strlen($value) !== 14) {
                     $fail('O CNPJ deve ter 14 dígitos.');
+
                     return;
                 }
 
-                if (!self::isValidCNPJ($value)) {
+                if (! self::isValidCNPJ($value)) {
                     $fail('O CNPJ informado é inválido.');
                 }
             };

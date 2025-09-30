@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Projects\Schemas;
 
 use App\Models\Client;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
+use Filament\Forms\Components\{RichEditor, Select, TextInput};
+use Filament\Schemas\Components\{Grid, Section};
 use Filament\Schemas\Schema;
 
 class ProjectForm
@@ -20,27 +19,21 @@ class ProjectForm
                     Grid::make()->schema([
                         Select::make('client_id')
                             ->label('Cliente')
-                            ->options(Client::query()->orderBy("company_name")->pluck('clients.company_name', 'clients.id'))
+                            ->options(Client::query()->orderBy('company_name')->pluck('clients.company_name', 'clients.id'))
                             ->searchable()
                             ->required()->preload(),
-
 
                         TextInput::make('project_name')->label('Nome do Projeto')->required(),
                         Select::make('payment_type')
                             ->label('Tipo de Pagamento')
-                            ->options(['monthly' => 'Mensal', 'sprint' => 'Sprint', 'hours' => 'Hora'])
+                            ->options([1 => 'Mensal', 2 => 'Sprint', 3 => 'Hora'])
                             ->searchable()
                             ->preload()
                             ->required(),
-                        Select::make('payment_method')
-                            ->label('Método de Pagamento')
-                            ->options(['monthly' => 'Mensal', 'sprint' => 'Sprint', 'hours' => 'Hora'])
-                            ->searchable()
-                            ->preload()
-                            ->required(),
+
                         TextInput::make('payment_day')->label('Dia do Pagamento')->required(),
                         RichEditor::make('description')
-                            ->label("Descrição do Projeto")
+                            ->label('Descrição do Projeto')
                             ->columnSpanFull(),
                         Select::make('status')
                             ->options([
@@ -54,8 +47,8 @@ class ProjectForm
                             ->searchable()
                             ->preload()
                             ->required(),
-                    ])->columns(2)
-                ])->columnSpanFull()
+                    ])->columns(2),
+                ])->columnSpanFull(),
 
             ]);
     }

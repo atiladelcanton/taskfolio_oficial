@@ -1,16 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Clients;
 
-use App\Filament\Resources\Clients\Pages\CreateClient;
-use App\Filament\Resources\Clients\Pages\EditClient;
-use App\Filament\Resources\Clients\Pages\ListClients;
-use App\Filament\Resources\Clients\Pages\ViewClient;
-use App\Filament\Resources\Clients\RelationManagers\ProjectsRelationManager;
-use App\Filament\Resources\Clients\Schemas\ClientForm;
-use App\Filament\Resources\Clients\Schemas\ClientInfolist;
+use App\Filament\Resources\Clients\Pages\{CreateClient, EditClient, ListClients, ViewClient};
+use App\Filament\Resources\Clients\Schemas\{ClientForm, ClientInfolist};
 use App\Filament\Resources\Clients\Tables\ClientsTable;
-use App\Filament\Resources\Projects\RelationManagers\ClientRelationManager;
 use App\Models\Client;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -22,11 +18,12 @@ class ClientResource extends Resource
 {
     protected static ?string $model = Client::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     protected static ?string $recordTitleAttribute = 'company_name';
 
     protected static ?string $navigationLabel = 'Clientes';
+
     protected static ?string $pluralLabel = 'Clientes';
 
     public static function form(Schema $schema): Schema
@@ -50,11 +47,13 @@ class ClientResource extends Resource
 
         ];
     }
+
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
         return parent::getEloquentQuery()
             ->withCount('projects');
     }
+
     public static function getPages(): array
     {
         return [
@@ -64,5 +63,4 @@ class ClientResource extends Resource
             'edit' => EditClient::route('/{record}/edit'),
         ];
     }
-
 }

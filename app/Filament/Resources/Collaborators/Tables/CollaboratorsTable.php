@@ -1,23 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Collaborators\Tables;
 
-use App\Models\Project;
-use App\Tables\Columns\DocumentColumn;
-use App\Tables\Columns\PhoneColumn;
-use Filament\Actions\Action;
-use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use App\Tables\Columns\{DocumentColumn, PhoneColumn};
+use Filament\Actions\{ActionGroup, DeleteAction, EditAction};
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\DB;
-use Filament\Support\RawJs;
+use Phiki\Phast\Text;
+
 class CollaboratorsTable
 {
     public static function configure(Table $table): Table
@@ -34,7 +26,7 @@ class CollaboratorsTable
                 PhoneColumn::make('cellphone')->label('Telefone')->searchable()->withWhatsApp()->withBadge(),
                 TextColumn::make('address')
                     ->label('Endereco')
-                    ->searchable(),
+                    ->searchable()  ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('payment_method')
                     ->label('Pagamento')
                     ->badge(),
@@ -47,11 +39,19 @@ class CollaboratorsTable
                 TextColumn::make('bb_agency')
                     ->label('Ag')
                     ->searchable(),
-                TextColumn::make('payment_day')
-                    ->label('Dia do Pagamento')
+                TextColumn::make('status')
+                    ->label('Status')
                     ->badge()
-                    ->numeric()
-                    ->sortable(),
+                    ->color(fn ($state): string => match ($state) {
+                        1 => 'success',
+                        0 => 'warning',
+                        default => 'gray',
+                    })
+                    ->formatStateUsing(fn ($state): string => match ($state) {
+                        1 => 'Ativo',
+                        0 => 'Inativo',
+                        default => $state ?? 'N/A',
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime('d/m/Y')
                     ->sortable()
@@ -65,7 +65,7 @@ class CollaboratorsTable
                     EditAction::make(),
 
                     DeleteAction::make(),
-                ])->label("Acoes")
+                ])->label('Acoes'),
 
             ]);
     }

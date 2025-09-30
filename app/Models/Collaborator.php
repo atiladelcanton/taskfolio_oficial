@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\CollaboratorFactory;
@@ -23,12 +25,13 @@ class Collaborator extends Model
         'pix_key',
         'bb_account',
         'bb_agency',
-        'payment_day',
+        'payment_type',
+        'status',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // Relacionamentos

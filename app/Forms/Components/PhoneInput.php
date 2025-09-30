@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Forms\Components;
 
 use Filament\Forms\Components\TextInput;
@@ -25,7 +27,9 @@ class PhoneInput extends TextInput
 
         // Formatar ao carregar (edição)
         $this->formatStateUsing(function ($state) {
-            if (!$state) return $state;
+            if (! $state) {
+                return $state;
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -91,11 +95,13 @@ class PhoneInput extends TextInput
 
                 if (strlen($value) < 10) {
                     $fail('O telefone deve ter no mínimo 10 dígitos.');
+
                     return;
                 }
 
                 if (strlen($value) > 11) {
                     $fail('O telefone deve ter no máximo 11 dígitos.');
+
                     return;
                 }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -10,11 +12,14 @@ use Illuminate\Support\Str;
 use Yebor974\Filament\RenewPassword\Contracts\RenewPasswordContract;
 use Yebor974\Filament\RenewPassword\Traits\RenewPassword;
 
-class User extends Authenticatable  implements RenewPasswordContract
+class User extends Authenticatable implements RenewPasswordContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
+
     use RenewPassword;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -25,7 +30,7 @@ class User extends Authenticatable  implements RenewPasswordContract
         'email',
         'password',
         'force_renew_password',
-        'type'
+        'type',
     ];
 
     /**

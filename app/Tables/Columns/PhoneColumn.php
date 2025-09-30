@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tables\Columns;
 
 use Filament\Tables\Columns\TextColumn;
@@ -22,7 +24,7 @@ class PhoneColumn extends TextColumn
 
         // Formatação automática
         $this->formatStateUsing(function ($state) {
-            if (!$state) {
+            if (! $state) {
                 return '-';
             }
 
@@ -44,7 +46,9 @@ class PhoneColumn extends TextColumn
 
         // Tooltip mostrando o tipo
         $this->tooltip(function ($state) {
-            if (!$state) return null;
+            if (! $state) {
+                return null;
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -67,15 +71,17 @@ class PhoneColumn extends TextColumn
             ->color(fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11 ? 'success' : 'info');
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
             if (strlen($state) <= 10) {
-                return 'Fixo: ' . preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $state);
+                return 'Fixo: '.preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $state);
             }
 
-            return 'Cel: ' . preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $state);
+            return 'Cel: '.preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $state);
         });
 
         return $this;
@@ -106,7 +112,8 @@ class PhoneColumn extends TextColumn
      */
     public function withColor(): static
     {
-        $this->color(fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11
+        $this->color(
+            fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11
             ? 'success'  // Celular = verde
             : 'info'     // Fixo = azul
         );
@@ -144,7 +151,9 @@ class PhoneColumn extends TextColumn
     public function onlyNumbers(): static
     {
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             return preg_replace('/\D/', '', $state) ?: '-';
         });
@@ -158,7 +167,9 @@ class PhoneColumn extends TextColumn
     public function masked(): static
     {
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -180,12 +191,14 @@ class PhoneColumn extends TextColumn
     public function compact(): static
     {
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
             // Mostra apenas últimos 4 dígitos
-            return '****-' . substr($state, -4);
+            return '****-'.substr($state, -4);
         });
 
         return $this;
@@ -199,7 +212,9 @@ class PhoneColumn extends TextColumn
         $this->label('Telefone Fixo');
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -221,7 +236,9 @@ class PhoneColumn extends TextColumn
         $this->label('Celular');
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 

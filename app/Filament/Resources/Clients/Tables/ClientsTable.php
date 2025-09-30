@@ -1,20 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Clients\Tables;
 
-use App\Tables\Columns\DocumentColumn;
-use App\Tables\Columns\PhoneColumn;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
-use Filament\Actions\ViewAction;
+use App\Tables\Columns\{DocumentColumn, PhoneColumn};
+use Filament\Actions\{DeleteAction, EditAction, ViewAction};
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class ClientsTable
 {
-
     public static function configure(Table $table): Table
     {
         return $table
@@ -30,9 +26,9 @@ class ClientsTable
                 TextColumn::make('email')
                     ->label('E-mail do Cliente')
                     ->searchable(),
-               PhoneColumn::make('phone')
+                PhoneColumn::make('phone')
                     ->label('Telefone do Cliente')
-                   ->withColor()->withBadge()->withIcon()
+                    ->withColor()->withBadge()->withIcon()
                     ->searchable(),
                 TextColumn::make('projects_count')
                     ->label('Projetos')

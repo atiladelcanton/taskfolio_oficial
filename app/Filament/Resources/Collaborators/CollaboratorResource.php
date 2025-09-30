@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Collaborators;
 
-use App\Filament\Resources\Collaborators\Pages\CreateCollaborator;
-use App\Filament\Resources\Collaborators\Pages\EditCollaborator;
-use App\Filament\Resources\Collaborators\Pages\ListCollaborators;
+use App\Filament\Resources\Collaborators\Pages\{CreateCollaborator, EditCollaborator, ListCollaborators};
 use App\Filament\Resources\Collaborators\RelationManagers\CollaboratorsRelationManager;
 use App\Filament\Resources\Collaborators\Schemas\CollaboratorForm;
 use App\Filament\Resources\Collaborators\Tables\CollaboratorsTable;
@@ -19,11 +19,14 @@ class CollaboratorResource extends Resource
 {
     protected static ?string $model = Collaborator::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static ?string $recordTitleAttribute = 'name';
+
     protected static ?string $navigationLabel = 'Colaboradores';
+
     protected static ?string $pluralLabel = 'Colaboradores';
+
     public static function form(Schema $schema): Schema
     {
         return CollaboratorForm::configure($schema);
@@ -37,7 +40,7 @@ class CollaboratorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            CollaboratorsRelationManager::class
+            CollaboratorsRelationManager::class,
         ];
     }
 

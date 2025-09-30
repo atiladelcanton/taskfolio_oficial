@@ -1,23 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\{Content, Envelope};
 use Illuminate\Queue\SerializesModels;
 
 class Welcome extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public User $user,public string $password)
+    public function __construct(public User $user, public string $password)
     {
         //
     }
@@ -43,7 +44,7 @@ class Welcome extends Mailable
                 'name' => $this->user->name,
                 'email' => $this->user->email,
                 'password' => $this->password,
-                'loginUrl' => config('app.url') . '/app/login',
+                'loginUrl' => config('app.url').'/app/login',
             ],
         );
     }

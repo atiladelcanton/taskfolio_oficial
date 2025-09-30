@@ -1,13 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Collaborators\RelationManagers;
 
 use App\Models\Project;
-use Filament\Actions\AttachAction;
-use Filament\Actions\DetachAction;
-use Filament\Actions\EditAction;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions\{AttachAction, DetachAction, EditAction};
+use Filament\Forms\Components\{Select, TextInput};
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -18,7 +17,9 @@ use Filament\Tables\Table;
 class CollaboratorsRelationManager extends RelationManager
 {
     protected static string $relationship = 'projects';
-protected static ?string $title = 'Projetos';
+
+    protected static ?string $title = 'Projetos';
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -63,7 +64,7 @@ protected static ?string $title = 'Projetos';
                     ->sortable(),
                 TextColumn::make('pivot.collaborator_value')
                     ->label('Valor')
-                    ->formatStateUsing(fn ($state) => 'R$ ' . number_format($state, 2, ',', '.'))
+                    ->formatStateUsing(fn ($state) => 'R$ '.number_format($state, 2, ',', '.'))
                     ->icon('heroicon-m-banknotes')
                     ->iconColor('success')
                     ->sortable(),
@@ -88,12 +89,12 @@ protected static ?string $title = 'Projetos';
                                 Project::query()
                                     ->with(['client'])
                                     ->get()
-                                    ->mapWithKeys(fn($project) => [
+                                    ->mapWithKeys(fn ($project) => [
                                         $project->id => '<span class="text-blue-600 dark:text-blue-400 font-bold">('
-                                            . e($project->client->company_name)
-                                            . ')</span> <strong>'
-                                            . e($project->project_name)
-                                            . '</strong>'
+                                            .e($project->client->company_name)
+                                            .')</span> <strong>'
+                                            .e($project->project_name)
+                                            .'</strong>',
                                     ])
                             )
                             ->allowHtml()
@@ -124,7 +125,7 @@ protected static ?string $title = 'Projetos';
                         foreach ((array) $data['recordId'] as $projectId) {
                             $collaborator->projects()->attach($projectId, [
                                 'collaborator_value' => $data['collaborator_value'],
-                                'payment_type' => $data['payment_type']
+                                'payment_type' => $data['payment_type'],
                             ]);
                         }
                     }),
@@ -168,7 +169,7 @@ protected static ?string $title = 'Projetos';
 
                         $collaborator->projects()->updateExistingPivot($record->id, [
                             'collaborator_value' => $data['collaborator_value'],
-                            'payment_type' => $data['payment_type']
+                            'payment_type' => $data['payment_type'],
                         ]);
                     }),
 
@@ -177,15 +178,15 @@ protected static ?string $title = 'Projetos';
                     ->modalHeading('Remover colaborador do projeto')
                     ->modalDescription(fn ($record) => new \Illuminate\Support\HtmlString(
                         'Você está prestes a remover o colaborador do projeto:<br><br>'
-                        . '<span class="inline-flex items-center rounded-md bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">'
-                        . e($record->project_name)
-                        . '</span><br><br>'
-                        . 'Deseja continuar?'
+                        .'<span class="inline-flex items-center rounded-md bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-400/10 dark:text-red-400 dark:ring-red-400/20">'
+                        .e($record->project_name)
+                        .'</span><br><br>'
+                        .'Deseja continuar?'
                     ))
                     ->modalSubmitActionLabel('Sim, remover')
                     ->modalCancelActionLabel('Cancelar')
                     ->modalIcon('heroicon-o-exclamation-triangle')
-                    ->color('danger')
+                    ->color('danger'),
 
             ]);
     }

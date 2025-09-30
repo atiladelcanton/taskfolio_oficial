@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use App\Enums\TaskType;
@@ -37,12 +39,12 @@ class Task extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Task::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany(Task::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id');
     }
 
     public function applicant()

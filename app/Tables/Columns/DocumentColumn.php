@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tables\Columns;
 
 use Filament\Tables\Columns\TextColumn;
@@ -22,7 +24,7 @@ class DocumentColumn extends TextColumn
 
         // Formatação automática de CPF/CNPJ
         $this->formatStateUsing(function ($state) {
-            if (!$state) {
+            if (! $state) {
                 return '-';
             }
 
@@ -45,7 +47,9 @@ class DocumentColumn extends TextColumn
 
         // Tooltip mostrando o tipo
         $this->tooltip(function ($state) {
-            if (!$state) return null;
+            if (! $state) {
+                return null;
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -65,7 +69,9 @@ class DocumentColumn extends TextColumn
     public function Onlynumber(): static
     {
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             return preg_replace('/\D/', '', $state) ?: '-';
         });
@@ -82,15 +88,17 @@ class DocumentColumn extends TextColumn
             ->color(fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11 ? 'info' : 'success');
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
             if (strlen($state) <= 11) {
-                return 'CPF: ' . preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $state);
+                return 'CPF: '.preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $state);
             }
 
-            return 'CNPJ: ' . preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $state);
+            return 'CNPJ: '.preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $state);
         });
 
         return $this;
@@ -104,7 +112,9 @@ class DocumentColumn extends TextColumn
         $this->label('CPF');
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -128,7 +138,9 @@ class DocumentColumn extends TextColumn
         $this->label('CNPJ');
 
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -150,7 +162,9 @@ class DocumentColumn extends TextColumn
     public function masked(): static
     {
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
@@ -171,7 +185,8 @@ class DocumentColumn extends TextColumn
      */
     public function withIcon(): static
     {
-        $this->icon(fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11
+        $this->icon(
+            fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11
             ? 'heroicon-o-user'
             : 'heroicon-o-building-office-2'
         );
@@ -186,7 +201,8 @@ class DocumentColumn extends TextColumn
      */
     public function withColor(): static
     {
-        $this->color(fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11
+        $this->color(
+            fn ($state) => strlen(preg_replace('/\D/', '', $state ?? '')) == 11
             ? 'info'   // CPF = azul
             : 'success' // CNPJ = verde
         );
@@ -200,17 +216,19 @@ class DocumentColumn extends TextColumn
     public function compact(): static
     {
         $this->formatStateUsing(function ($state) {
-            if (!$state) return '-';
+            if (! $state) {
+                return '-';
+            }
 
             $state = preg_replace('/\D/', '', $state);
 
             if (strlen($state) <= 11) {
                 // CPF compacto: ***789-01
-                return '***' . substr($state, -6, 3) . '-' . substr($state, -2);
+                return '***'.substr($state, -6, 3).'-'.substr($state, -2);
             }
 
             // CNPJ compacto: ***0000-01
-            return '***' . substr($state, -6, 4) . '-' . substr($state, -2);
+            return '***'.substr($state, -6, 4).'-'.substr($state, -2);
         });
 
         return $this;

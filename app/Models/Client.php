@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,10 +31,12 @@ class Client extends Model
     {
         return $this->hasMany(Project::class);
     }
+
     public function projectsCount()
     {
         return $this->hasMany(Project::class)->count();
     }
+
     public function clientPayments()
     {
         return $this->hasMany(ClientPayment::class);

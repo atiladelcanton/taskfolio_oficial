@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Collaborators\Pages;
 
-use App\Enums\UserTypeEnum;
 use App\Filament\Resources\Collaborators\CollaboratorResource;
 use App\Mail\Welcome;
 use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\{Hash, Mail};
 use Illuminate\Support\Str;
 
 class CreateCollaborator extends CreateRecord
@@ -16,8 +16,11 @@ class CreateCollaborator extends CreateRecord
     protected static string $resource = CollaboratorResource::class;
 
     protected static ?string $title = 'Novo Colaborador';
-    private  ?User $user;
+
+    private ?User $user;
+
     private ?string $password;
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $password = Str::random(8);
@@ -26,17 +29,21 @@ class CreateCollaborator extends CreateRecord
             ->create([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => Hash::make( $password),
-                'type' => $data['type'],
+                'password' => Hash::make($password),
+                'type' => $data['user_type'],
                 'force_renew_password' => true,
             ]);
+
         $data['user_id'] = $user->id;
         $this->user = $user;
+        unset($data['user_type']);
+
         return $data;
     }
+
     protected function afterCreate(): void
     {
-        if($this->user){
+        if ($this->user) {
             Mail::to($this->user->email)->send(new Welcome($this->user, $this->password));
         }
     }

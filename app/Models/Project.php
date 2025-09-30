@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +16,6 @@ class Project extends Model
         'client_id',
         'project_name',
         'payment_type',
-        'payment_method',
         'payment_day',
         'description',
         'status',
@@ -23,8 +24,6 @@ class Project extends Model
     protected function casts(): array
     {
         return [
-            'payment_type' => 'string',
-            'payment_method' => 'string',
             'status' => 'string',
         ];
     }

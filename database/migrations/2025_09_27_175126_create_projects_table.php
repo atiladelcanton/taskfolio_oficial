@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +16,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
-            $table->enum('payment_type', ['monthly', 'sprint', 'hours']);
-            $table->enum('payment_method', ['monthly', 'sprint', 'fixed']);
+            $table->integer('payment_type')->comment('monthly,sprint,hourly,fixed');
             $table->string('payment_day')->nullable();
             $table->text('description')->nullable();
             $table->enum('status', ['negociation', 'pending', 'doing', 'canceled', 'finished'])

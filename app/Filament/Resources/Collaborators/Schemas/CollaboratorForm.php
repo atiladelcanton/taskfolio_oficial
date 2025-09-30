@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\Collaborators\Schemas;
 
-use App\Forms\Components\DocumentInput;
-use App\Forms\Components\PhoneInput;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
+use App\Forms\Components\{DocumentInput, PhoneInput};
+use Filament\Forms\Components\{Hidden, Select, TextInput};
+use Filament\Schemas\Components\{Grid, Section};
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
@@ -37,36 +35,33 @@ class CollaboratorForm
                             ->options(['pix' => 'Pix', 'transf' => 'Transferencia'])
                             ->reactive()
                             ->required(),
+                        Select::make('payment_type')
+                            ->label('Tipo de Pagamento')
+                            ->placeholder('Selecione o tipo de pagamento')
+                            ->options([1 => 'Quinzenalmente', 2 => 'Mensalmente'])
+                            ->required(),
                         TextInput::make('pix_key')
                             ->label('Chave Pix')
-                            ->visible(fn(Get $get) => $get('payment_method') == 'pix'),
+                            ->visible(fn (Get $get) => $get('payment_method') == 'pix'),
                         TextInput::make('bb_agency')->label('Agencia')
-                            ->visible(fn(Get $get) => $get('payment_method') == 'transf'),
+                            ->visible(fn (Get $get) => $get('payment_method') == 'transf'),
                         TextInput::make('bb_account')
-                            ->label('Conta')->visible(fn(Get $get) => $get('payment_method') == 'transf'),
-
-                        Select::make('payment_day')
-                            ->label('Dia de Pagamento')
-                            ->placeholder('Selecione o Dia de Pagamento')
-                            ->options([
-                                15 => '15',
-                                25 => '25',
-                                30 => '30',
-                            ]),
-                        Select::make('user.type')
+                            ->label('Conta')->visible(fn (Get $get) => $get('payment_method') == 'transf'),
+                        Select::make('user_type')
                             ->label('Perfil')
                             ->options([
                                 1 => 'Administrador',
-                                3 => 'Colaborador'
-                            ]) ->formatStateUsing(fn ($record) => $record?->user?->type)
-                            ->saveRelationshipsUsing(function ($component, $state, $record) {
-                                if ($record && $record->user) {
-                                    $record->user->update(['type' => $state]);
-                                }
-                            })
-                            ->dehydrated(false)
-                    ])->columns(3)
-                ])->columnSpanFull()
+                                3 => 'Colaborador',
+                            ])
+                            ->default(3)
+                            ->required()
+                            ->helperText(
+                                fn ($context) => $context === 'create'
+                                ? 'Um usuário será criado automaticamente com este perfil'
+                                : null
+                            ),
+                    ])->columns(3),
+                ])->columnSpanFull(),
             ]);
     }
 }

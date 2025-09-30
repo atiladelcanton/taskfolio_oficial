@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Database\Factories\ProjectCollaboratorFactory;
@@ -19,7 +21,7 @@ class ProjectCollaborator extends Model
         'project_id',
         'collaborator_id',
         'collaborator_value',
-        'payment_type'
+        'payment_type',
     ];
 
     public function project()

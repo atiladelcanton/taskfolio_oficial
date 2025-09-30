@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -23,7 +25,6 @@ return new class extends Migration
             $table->string('pix_key')->nullable();
             $table->string('bb_account')->nullable();
             $table->string('bb_agency')->nullable();
-            $table->integer('payment_day')->nullable();
             $table->timestamps();
 
             $table->index('email');
