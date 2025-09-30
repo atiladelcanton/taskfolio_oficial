@@ -2,14 +2,22 @@
 
 namespace App\Filament\Resources\Collaborators\Tables;
 
+use App\Models\Project;
 use App\Tables\Columns\DocumentColumn;
 use App\Tables\Columns\PhoneColumn;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-
+use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\DB;
+use Filament\Support\RawJs;
 class CollaboratorsTable
 {
     public static function configure(Table $table): Table
@@ -23,7 +31,7 @@ class CollaboratorsTable
                     ->label('E-mail')
                     ->searchable(),
                 DocumentColumn::make('document')->label('Documento')->searchable(),
-                PhoneColumn::make('phone')->label('Telefone')->searchable(),
+                PhoneColumn::make('cellphone')->label('Telefone')->searchable()->withWhatsApp()->withBadge(),
                 TextColumn::make('address')
                     ->label('Endereco')
                     ->searchable(),
@@ -41,6 +49,7 @@ class CollaboratorsTable
                     ->searchable(),
                 TextColumn::make('payment_day')
                     ->label('Dia do Pagamento')
+                    ->badge()
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
@@ -52,7 +61,12 @@ class CollaboratorsTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
+                ActionGroup::make([
+                    EditAction::make(),
+
+                    DeleteAction::make(),
+                ])->label("Acoes")
+
             ]);
     }
 }

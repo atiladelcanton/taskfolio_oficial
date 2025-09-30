@@ -37,7 +37,6 @@ class CreateCollaborator extends CreateRecord
     protected function afterCreate(): void
     {
         if($this->user){
-
             Mail::to($this->user->email)->send(new Welcome($this->user, $this->password));
         }
     }

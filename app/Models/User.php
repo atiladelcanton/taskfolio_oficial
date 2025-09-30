@@ -24,7 +24,8 @@ class User extends Authenticatable  implements RenewPasswordContract
         'name',
         'email',
         'password',
-        'force_renew_password'
+        'force_renew_password',
+        'type'
     ];
 
     /**

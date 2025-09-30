@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Collaborators\Schemas;
 
 use App\Forms\Components\DocumentInput;
 use App\Forms\Components\PhoneInput;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
@@ -19,7 +20,7 @@ class CollaboratorForm
             ->components([
                 Section::make([
                     Grid::make()->schema([
-
+                        Hidden::make('id'),
                         TextInput::make('name')
                             ->label('Nome')
                             ->required(),
@@ -52,12 +53,18 @@ class CollaboratorForm
                                 25 => '25',
                                 30 => '30',
                             ]),
-                        Select::make('type')
+                        Select::make('user.type')
                             ->label('Perfil')
                             ->options([
                                 1 => 'Administrador',
                                 3 => 'Colaborador'
-                            ])
+                            ]) ->formatStateUsing(fn ($record) => $record?->user?->type)
+                            ->saveRelationshipsUsing(function ($component, $state, $record) {
+                                if ($record && $record->user) {
+                                    $record->user->update(['type' => $state]);
+                                }
+                            })
+                            ->dehydrated(false)
                     ])->columns(3)
                 ])->columnSpanFull()
             ]);

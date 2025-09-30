@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Collaborators;
 use App\Filament\Resources\Collaborators\Pages\CreateCollaborator;
 use App\Filament\Resources\Collaborators\Pages\EditCollaborator;
 use App\Filament\Resources\Collaborators\Pages\ListCollaborators;
+use App\Filament\Resources\Collaborators\RelationManagers\CollaboratorsRelationManager;
 use App\Filament\Resources\Collaborators\Schemas\CollaboratorForm;
 use App\Filament\Resources\Collaborators\Tables\CollaboratorsTable;
 use App\Models\Collaborator;
@@ -36,7 +37,7 @@ class CollaboratorResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            CollaboratorsRelationManager::class
         ];
     }
 

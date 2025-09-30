@@ -625,7 +625,10 @@ PhoneInput::make('phone')
     ->helperText('Digite seu telefone')
     ->required(false);
 ```
-
+## Criando um Relation Manager
+```shell
+php artisan make:filament-relation-manager CollaboratorResource projects project_name --attac
+```
 ---
 
 ## 🐛 Solução de Problemas

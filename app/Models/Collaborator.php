@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Database\Factories\CollaboratorFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Collaborator extends Model
 {
-    /** @use HasFactory<\Database\Factories\CollaboratorFactory> */
+    /** @use HasFactory<CollaboratorFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -24,24 +26,17 @@ class Collaborator extends Model
         'payment_day',
     ];
 
-    protected function casts(): array
+    public function user(): BelongsTo
     {
-        return [
-            'payment_method' => 'string',
-            'payment_day' => 'integer',
-        ];
+        return $this->belongsTo(User::class,'user_id');
     }
 
     // Relacionamentos
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function projects()
     {
         return $this->belongsToMany(Project::class, 'project_collaborators')
-            ->withPivot('collaborator_value')
+            ->withPivot('collaborator_value', 'payment_type')
             ->withTimestamps();
     }
 
@@ -50,14 +45,23 @@ class Collaborator extends Model
         return $this->hasMany(MonthlyPayment::class);
     }
 
-    // Scopes
     public function scopeByPaymentMethod($query, $method)
     {
         return $query->where('payment_method', $method);
     }
 
+    // Scopes
+
     public function scopeByPaymentDay($query, $day)
     {
         return $query->where('payment_day', $day);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'payment_method' => 'string',
+            'payment_day' => 'integer',
+        ];
     }
 }
