@@ -1,0 +1,10 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../resources/views/filament/**/*';
+.fi-sidebar-nav {
+    @apply bg-white border-t border-gray-200;
+}
+.fi-sidebar-header{
+    @apply justify-between items-center;
+}

@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Yebor974\Filament\RenewPassword\Contracts\RenewPasswordContract;
+use Yebor974\Filament\RenewPassword\Traits\RenewPassword;
 
-class User extends Authenticatable
+class User extends Authenticatable  implements RenewPasswordContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
-
+    use RenewPassword;
     /**
      * The attributes that are mass assignable.
      *
@@ -22,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'force_renew_password'
     ];
 
     /**

@@ -19,6 +19,7 @@ class ProjectCollaborator extends Model
         'project_id',
         'collaborator_id',
         'collaborator_value',
+        'payment_type'
     ];
 
     public function project()

@@ -1,32 +1,33 @@
 <?php
 
-namespace App\Filament\Resources\Clients\Pages;
+namespace App\Filament\Resources\Collaborators\Pages;
 
 use App\Enums\UserTypeEnum;
-use App\Filament\Resources\Clients\ClientResource;
+use App\Filament\Resources\Collaborators\CollaboratorResource;
+use App\Mail\Welcome;
 use App\Models\User;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-class CreateClient extends CreateRecord
+class CreateCollaborator extends CreateRecord
 {
-    protected static string $resource = ClientResource::class;
+    protected static string $resource = CollaboratorResource::class;
 
-    protected static ?string $title = 'Novo Cliente';
+    protected static ?string $title = 'Novo Colaborador';
     private  ?User $user;
-
-
-    protected static bool $canCreateAnother = false;
+    private ?string $password;
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $password = Str::random(8);
+        $this->password = $password;
         $user = User::query()
             ->create([
-                'name' => $data['personal_name'],
+                'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make( $password),
-                'type' => UserTypeEnum::CLIENT,
+                'type' => $data['type'],
                 'force_renew_password' => true,
             ]);
         $data['user_id'] = $user->id;
@@ -36,7 +37,8 @@ class CreateClient extends CreateRecord
     protected function afterCreate(): void
     {
         if($this->user){
-            dd('Disarear evento para enviar email de boas vindas');
+
+            Mail::to($this->user->email)->send(new Welcome($this->user, $this->password));
         }
     }
 
