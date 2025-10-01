@@ -11,6 +11,7 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/volt": "^1.7.0",
+        "lucascudo/laravel-pt-br-localization": "^3.0",
         "yebor974/filament-renew-password": "^3.0"
     },
     "require-dev": {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Clients\Pages;
 
-use App\Enums\UserTypeEnum;
+use App\Enums\Enums\UserTypeEnum;
 use App\Filament\Resources\Clients\ClientResource;
 use App\Mail\Welcome;
 use App\Models\User;

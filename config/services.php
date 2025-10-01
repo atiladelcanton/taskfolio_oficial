@@ -36,5 +36,11 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'task_form' => [
+        'accept_criteria' => '💡 Exemplo:
+O relatório deve conter filtros de mês/ano.
+Deve gerar PDF.
+Deve estar disponível apenas para gestores.'
+    ]
 
 ];

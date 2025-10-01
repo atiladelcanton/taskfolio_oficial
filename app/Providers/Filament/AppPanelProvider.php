@@ -28,6 +28,7 @@ class AppPanelProvider extends PanelProvider
             ->path('app')
             ->login()
             ->databaseNotifications()
+            ->passwordReset()
             ->brandLogo(asset('images/logo.png'))
             ->colors([
                 'primary' => Color::Purple,
