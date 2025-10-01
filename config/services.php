@@ -40,7 +40,7 @@ return [
         'accept_criteria' => '💡 Exemplo:
 O relatório deve conter filtros de mês/ano.
 Deve gerar PDF.
-Deve estar disponível apenas para gestores.'
-    ]
+Deve estar disponível apenas para gestores.',
+    ],
 
 ];

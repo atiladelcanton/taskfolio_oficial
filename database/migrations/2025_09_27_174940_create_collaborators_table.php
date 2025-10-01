@@ -29,7 +29,7 @@ return new class extends Migration
 
             $table->index('email');
             $table->index('name');
-            $table->index(['payment_method', 'payment_day']);
+            $table->index(['payment_method']);
             $table->index('user_id');
         });
     }

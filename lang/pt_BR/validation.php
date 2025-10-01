@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 return [
 
     /*
@@ -123,7 +125,7 @@ return [
         'numbers'          => 'O campo :attribute deve conter pelo menos um número.',
         'symbols'          => 'O campo :attribute deve conter pelo menos um símbolo.',
         'uncompromised'    => 'A senha que você inseriu em :attribute está em um vazamento de dados.'
-            . ' Por favor escolha uma senha diferente.',
+            .' Por favor escolha uma senha diferente.',
     ],
     'present'              => 'O campo :attribute deve estar presente.',
     'present_if'           => 'O campo :attribute deve estar presente quando :other for :value.',
@@ -235,7 +237,7 @@ return [
         'modality' => 'modalidade',
         'category' => 'categoria',
         'blood_type' => 'tipo sanguíneo',
-        'birth_date' => 'data de nascimento'
+        'birth_date' => 'data de nascimento',
     ],
 
 ];

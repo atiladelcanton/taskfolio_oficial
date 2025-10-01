@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Projects;
 
 use App\Enums\Enums\UserTypeEnum;
@@ -12,13 +14,14 @@ class ListProjectsByLoggedUser
     {
         $userId = auth()->id();
         if (auth()->user()->type !== UserTypeEnum::ADMINISTRADOR->value) {
-            $owned = Project::query()->whereHas('client', fn($q) => $q->where('user_id', $userId))->get();
-            $collab = Project::query()->whereHas('collaborators', fn($q) => $q->where('user_id', $userId))->get();
+            $owned = Project::query()->whereHas('client', fn ($q) => $q->where('user_id', $userId))->get();
+            $collab = Project::query()->whereHas('collaborators', fn ($q) => $q->where('user_id', $userId))->get();
             $all = $owned->merge($collab)->unique('id');
         } else {
             $all = Project::query()->orderBy('project_name')->get();
         }
-        return $all->mapWithKeys(function ($project) use ($userId) {
+
+        return $all->mapWithKeys(function ($project) {
             return [$project->id => "({$project->client->company_name}) {$project->project_name}"];
         });
     }

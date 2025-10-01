@@ -41,10 +41,12 @@ class Task extends Model
     {
         return $this->belongsTo(Sprint::class);
     }
+
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
+
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
