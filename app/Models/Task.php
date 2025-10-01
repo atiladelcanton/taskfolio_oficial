@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\Enums\UserTypeEnum;
 use App\Enums\TaskType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,8 +19,12 @@ class Task extends Model
         'parent_id',
         'applicant_id',
         'collaborator_id',
+        'project_id',
         'title',
         'description',
+        'accept_criteria',
+        'scene_test',
+        'ovservations',
         'type_task',
         'total_time_worked',
     ];
@@ -36,7 +41,10 @@ class Task extends Model
     {
         return $this->belongsTo(Sprint::class);
     }
-
+    public function project()
+    {
+        return $this->belongsTo(Project::class);
+    }
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id');
@@ -54,7 +62,7 @@ class Task extends Model
 
     public function collaborator()
     {
-        return $this->belongsTo(User::class, 'collaborator_id');
+        return $this->belongsTo(User::class, 'collaborator_id')->where('type', UserTypeEnum::COLLABORATOR->value);
     }
 
     public function comments()

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('collaborator_id')->nullable()->constrained('users')->onDelete('set null');
             $table->string('title');
             $table->text('description');
-            $table->enum('type_task', ['epic', 'bug', 'task'])->default('task');
+            $table->enum('type_task', ['epic', 'bug', 'task','improvement','feature'])->default('task');
             $table->string('total_time_worked')->nullable()->comment('formato HH:MM:SS');
             $table->timestamps();
 
