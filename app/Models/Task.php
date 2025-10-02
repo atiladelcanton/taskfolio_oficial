@@ -27,6 +27,8 @@ class Task extends Model
         'ovservations',
         'type_task',
         'total_time_worked',
+        'priority',
+        'status'
     ];
 
     protected function casts(): array

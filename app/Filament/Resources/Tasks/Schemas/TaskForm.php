@@ -37,6 +37,8 @@ class TaskForm
                                 <li>⭐ <strong>FEATURE</strong> → pode ter <strong>TASKs, BUGs ou MELHORIAs</strong></li>
                                 <li>📋 <strong>TASK</strong> → pode ter outras <strong>TASKs, BUGs ou MELHORIAs</strong></li>
                                 <li>🐛 <strong>BUG/MELHORIA</strong> → pode ter <strong>TASKs, BUGs ou MELHORIAs</strong></li>
+                                <li><hr/></li>
+                                <li>⭐Tasks novas só podem ser criadas nestes status iniciais (BACKLOG,REFINAMENTO,TODO)</li>
                             </ul>
                         </div>
                     ')),
@@ -69,7 +71,7 @@ class TaskForm
                             ])
                             ->inline()
                             ->required()
-                            ->live()
+                            ->grouped()
                             ->default('task')
                             ->extraAttributes(['class' => 'flex-wrap gap-2'])
                             ->afterStateUpdated(function ($state, Set $set, Get $get) {
@@ -100,7 +102,51 @@ class TaskForm
                                         $fail('Uma TASK não pode ter EPIC ou FEATURE como filhas. Apenas outras TASKS, BUGS ou MELHORIAS.');
                                     }
                                 },
-                            ]),
+                            ])->columnSpanFull(),
+                        ToggleButtons::make('priority')
+                            ->label('Prioridade')
+                            ->options([
+                                'low' => 'Baixa',
+                                'medium' => 'Média',
+                                'high' => 'Alta',
+                                'urgent' => 'Urgente',
+                            ])
+                            ->icons([
+                                'low' => 'heroicon-m-arrow-down',
+                                'medium' => 'heroicon-m-minus',
+                                'high' => 'heroicon-m-arrow-up',
+                                'urgent' => 'heroicon-m-fire',
+                            ])
+                            ->colors([
+                                'low' => 'gray',
+                                'medium' => 'info',
+                                'high' => 'warning',
+                                'urgent' => 'danger',
+                            ])
+                            ->grouped()
+                            ->default('medium')
+                            ->required(),
+                        ToggleButtons::make('status')
+                            ->label('Status Inicial')
+                            ->options([
+                                'backlog' => 'Backlog',
+                                'refinement' => 'Refinamento',
+                                'todo' => 'To Do',
+                            ])
+                            ->icons([
+                                'backlog' => 'heroicon-m-inbox-stack',
+                                'refinement' => 'heroicon-m-sparkles',
+                                'todo' => 'heroicon-m-clipboard-document-check',
+                            ])
+                            ->colors([
+                                'backlog' => 'gray',
+                                'refinement' => 'info',
+                                'todo' => 'warning',
+                            ])
+
+                            ->required()->grouped()
+                            ->default('backlog'),
+
                         TextInput::make('title')
                             ->label(__('modules.tasks.form.title.label'))
                             ->placeholder(__('modules.tasks.form.title.placeholder'))
