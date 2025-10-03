@@ -125,4 +125,41 @@ class Task extends Model
     {
         return $query->where('collaborator_id', $userId);
     }
+
+    public function activeTracking()
+    {
+        return $this->hasOne(TaskTrackingTime::class)
+            ->whereNotNull('start_at')
+            ->whereNull('stop_at')
+            ->latest();
+    }
+
+    public function updateTotalTimeWorked(): void
+    {
+        $totalSeconds = $this->trackingTimes()
+            ->completed()
+            ->get()
+            ->sum('duration_in_seconds');
+
+        $totalHours = round($totalSeconds / 3600, 2);
+
+        $this->update(['total_time_worked' => $totalHours]);
+    }
+
+    // Total em segundos (inclui sessão ativa)
+    public function getTotalSpentSecondsAttribute(): int
+    {
+        return (int) $this->trackingTimes()
+            ->selectRaw("COALESCE(SUM(TIMESTAMPDIFF(SECOND, start_at, COALESCE(stop_at, NOW()))), 0) AS seconds")
+            ->value('seconds');
+    }
+
+// Total formatado HH:MM (sem segundos para ficar compacto no card)
+    public function getTotalSpentFormattedAttribute(): string
+    {
+        $s = $this->total_spent_seconds;
+        $h = intdiv($s, 3600);
+        $m = intdiv($s % 3600, 60);
+        return sprintf('%02d:%02d', $h, $m);
+    }
 }

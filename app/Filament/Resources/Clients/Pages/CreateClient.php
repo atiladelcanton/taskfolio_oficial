@@ -21,10 +21,11 @@ class CreateClient extends CreateRecord
     private ?User $user;
 
     protected static bool $canCreateAnother = false;
-
+    private string $password='';
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $password = Str::random(8);
+        $this->password = $password;
         $user = User::query()
             ->create([
                 'name' => $data['personal_name'],
