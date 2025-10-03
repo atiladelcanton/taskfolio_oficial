@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\TaskBoard;
 use Filament\Http\Middleware\{Authenticate, AuthenticateSession, DisableBladeIconComponents, DispatchServingFilamentEvent};
 use Filament\Pages\Dashboard;
 use Filament\{Panel, PanelProvider};
@@ -47,6 +48,7 @@ class AppPanelProvider extends PanelProvider
             })
             ->pages([
                 Dashboard::class,
+                TaskBoard::class
             ])
             ->plugins([
                 RenewPasswordPlugin::make()

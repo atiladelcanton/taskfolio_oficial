@@ -2,6 +2,8 @@
 
 @source '../../../../app/Filament/**/*';
 @source '../../../../resources/views/filament/**/*';
+@source "../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php";
+
 .fi-sidebar-nav {
     @apply bg-white border-t border-gray-200;
 }
