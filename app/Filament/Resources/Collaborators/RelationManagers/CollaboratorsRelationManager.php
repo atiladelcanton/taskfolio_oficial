@@ -109,7 +109,13 @@ class CollaboratorsRelationManager extends RelationManager
                             ->stripCharacters(['.', ',']) // Remove pontos e vírgulas
                             ->numeric()
                             ->dehydrateStateUsing(function ($state) {
-                                return $state ? (float) str_replace(['.', ','], ['', '.'], $state) : null;
+                                if ($state === null || $state === '') {
+                                    return null;
+                                }
+
+                                $state = (string) $state;
+
+                                return (float) str_replace(['.', ','], ['', '.'], $state);
                             })
                             ->required(),
                         Select::make('payment_type')
