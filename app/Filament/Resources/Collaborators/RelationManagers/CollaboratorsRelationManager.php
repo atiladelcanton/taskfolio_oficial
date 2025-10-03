@@ -64,10 +64,13 @@ class CollaboratorsRelationManager extends RelationManager
                     ->sortable(),
                 TextColumn::make('pivot.collaborator_value')
                     ->label('Valor')
-                    ->formatStateUsing(fn ($state) => 'R$ '.number_format($state, 2, ',', '.'))
+                    ->formatStateUsing(fn ($state) => $state !== null
+                        ? 'R$ ' . number_format((float) $state, 2, ',', '.')
+                        : null
+                    )
                     ->icon('heroicon-m-banknotes')
                     ->iconColor('success')
-                    ->sortable(),
+                    ->sortable()
 
             ])
             ->filters([
