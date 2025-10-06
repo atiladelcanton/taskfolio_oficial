@@ -4,9 +4,28 @@
 @source '../../../../resources/views/filament/**/*';
 @source "../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php";
 
+
+/* Claro */
 .fi-sidebar-nav {
     @apply bg-white border-t border-gray-200;
 }
-.fi-sidebar-header{
-    @apply justify-between items-center;
+.fi-sidebar-header {
+    @apply justify-between items-center bg-white;
+}
+
+/* Escuro */
+.dark .fi-sidebar-nav {
+    @apply bg-gray-900 border-t border-gray-800;
+}
+.dark .fi-sidebar-header {
+    @apply bg-gray-900;
+}
+
+/* (opcional) melhorar legibilidade no dark */
+.dark .fi-sidebar-group-label { @apply text-gray-400; }
+.dark .fi-sidebar-item-label  { @apply text-gray-200; }
+.fi-sidebar-item a:hover      { @apply bg-gray-50 dark:bg-gray-800/60; }
+.fi-sidebar-item[aria-current="page"] a,
+.fi-sidebar-item[data-active] a {
+    @apply bg-gray-100 dark:bg-gray-800;
 }

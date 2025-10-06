@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Tasks\Tables;
 
-use Filament\Actions\{BulkActionGroup, DeleteBulkAction, EditAction};
+use Filament\Actions\{Action, BulkActionGroup, DeleteBulkAction, EditAction};
+use App\Actions\Tasks\ChangeStatusTaskAction;
+use App\Enums\TaskStatusEnum;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
@@ -188,7 +192,7 @@ class TasksTable
                         default => $record->status,
                     }),
             ])
-            ->defaultGroup('sprint.title') // ← AGRUPA POR SPRINT POR PADRÃO
+            ->defaultGroup('sprint.title')
             ->filters([
                 SelectFilter::make('project_id')
                     ->label('Projeto')
@@ -241,6 +245,34 @@ class TasksTable
             ])
             ->recordActions([
                 EditAction::make(),
+                Action::make('change_status')
+                    ->label('Mudar status')
+                    ->icon('heroicon-m-arrows-right-left')
+                    ->color('gray')
+                    ->modal(true)
+                    ->modalHeading('Mudar status da tarefa')
+                    ->modalSubmitActionLabel('Atualizar')
+                    ->schema([
+                        ToggleButtons::make('status')
+                            ->label('Novo status')
+                            ->options(TaskStatusEnum::options())
+                            ->icons(TaskStatusEnum::icons())
+                            ->colors(TaskStatusEnum::colors())
+                            ->inline()
+                            ->grouped()
+                            ->required()
+                            ->default(function ($record) {
+                                if ($record->status instanceof TaskStatusEnum) {
+                                    return $record->status->value;
+                                }
+                                return \App\Enums\TaskStatusEnum::tryFrom((string) $record->status)?->value
+                                    ?? \App\Enums\TaskStatusEnum::Backlog->value;
+                            }),
+                    ])
+                    ->action(function ($record, array $data,Action $action) {
+                        ChangeStatusTaskAction::handle($record,$data,$action);
+                    })
+
             ])
             ->emptyStateHeading('Nenhuma task encontrada')
             ->emptyStateDescription('Crie sua primeira task clicando no botão acima.')

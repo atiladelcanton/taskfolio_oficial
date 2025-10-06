@@ -2,34 +2,44 @@
 
 namespace App\Filament\Pages;
 
+use App\Actions\Tasks\ChangeStatusTaskAction;
+use App\Actions\Tasks\SyncTaskEvidencesAction;
+use App\Enums\TypeTaskEnum;
 use App\Models\Task;
 use App\Models\TaskTrackingTime;
+use App\Support\Tasks\ComponentsHelper;
+use BackedEnum;
+use Exception;
 use Filament\Actions\Action;
-
-use Filament\Infolists\Components\TextEntry;
-
+use Filament\Actions\Action as ModalAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Actions\Action as ModalAction;
 use Filament\Schemas\Schema;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\HtmlString;
-use Phiki\Phast\Text;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
 use Relaticle\Flowforge\Column;
 
 class TaskBoard extends BoardPage
 {
-    protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-view-columns';
+    protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-view-columns';
     protected static ?string $navigationLabel = 'Task Board';
     protected static ?string $title = 'Task Board';
 
+    public function moveCard(string $cardId, string $targetColumnId, ?string $afterCardId = null, ?string $beforeCardId = null): void
+    {
+        $task = Task::find($cardId);
+        ChangeStatusTaskAction::handle($task, ['status' => $targetColumnId]);
+    }
+
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function board(Board $board): Board
     {
@@ -38,7 +48,17 @@ class TaskBoard extends BoardPage
             ->recordTitleAttribute('title')
             ->columnIdentifier('status')
             ->positionIdentifier('position')
-
+            ->searchable(['title', 'description', 'collaborator.name'])
+            ->filters([
+                SelectFilter::make('type_task')
+                    ->options([
+                        'epic' => 'Epico',
+                        'task' => 'Task',
+                        'bug' => 'Bug',
+                        'feature' => 'Feature',
+                        'improvement' => 'Melhoria',
+                    ])
+            ])
             ->cardActions([
                 Action::make('acoes') // pode manter o name 'toggle_time' se preferir
                 ->label('Ações') // antes era "Tempo"
@@ -52,7 +72,7 @@ class TaskBoard extends BoardPage
                     ->modalIcon('heroicon-m-clock')
 
                     // Botões padrão do modal
-                    ->modalSubmitActionLabel(fn ($record) => $record->activeTracking ? 'Pausar' : 'Iniciar')
+                    ->modalSubmitActionLabel(fn($record) => $record->activeTracking ? 'Pausar' : 'Iniciar')
                     ->modalCancelActionLabel('Fechar')
 
                     // === Botão extra: Assumir tarefa (no mesmo modal, sem abrir outro) ===
@@ -66,8 +86,7 @@ class TaskBoard extends BoardPage
                             })
                             ->icon('heroicon-m-user-plus')
                             ->color('primary')
-                            ->disabled(fn ($record) => $record->collaborator_id === Auth::id())
-
+                            ->disabled(fn($record) => $record->collaborator_id === Auth::id())
                             ->action(function ($record) {
                                 $record->update(['collaborator_id' => Auth::id()]);
                                 Notification::make()
@@ -87,7 +106,7 @@ class TaskBoard extends BoardPage
                             ->where('task_id', $record->id)
                             ->orderBy('start_at', 'desc')
                             ->get()
-                            ->groupBy(fn ($t) => $t->start_at->timezone($tz)->toDateString())
+                            ->groupBy(fn($t) => $t->start_at->timezone($tz)->toDateString())
                             ->map(function ($group) {
                                 return $group->sum(function ($t) {
                                     $end = $t->stop_at ?? now();
@@ -106,7 +125,7 @@ class TaskBoard extends BoardPage
 
                         if ($activeTracking) {
                             $currentSeconds = $activeTracking->start_at->diffInSeconds($now);
-                            $currentSince   = $activeTracking->start_at->timezone($tz);
+                            $currentSince = $activeTracking->start_at->timezone($tz);
                         }
 
                         $format = function (int $seconds) {
@@ -117,14 +136,14 @@ class TaskBoard extends BoardPage
                         };
 
                         return view('filament/tasks/partials/tracking-playpause-modal', [
-                            'rows'           => $rows,              // 'YYYY-MM-DD' => total em segundos
-                            'grand'          => $grand,             // total geral em segundos
-                            'format'         => $format,
-                            'tz'             => $tz,
-                            'active'         => (bool) $activeTracking,
-                            'currentSince'   => $currentSince,
+                            'rows' => $rows,              // 'YYYY-MM-DD' => total em segundos
+                            'grand' => $grand,             // total geral em segundos
+                            'format' => $format,
+                            'tz' => $tz,
+                            'active' => (bool)$activeTracking,
+                            'currentSince' => $currentSince,
                             'currentSeconds' => $currentSeconds,
-                            'collaborator'   => $record->collaborator->name ?? null,
+                            'collaborator' => $record->collaborator->name ?? null,
                             'collaboratorId' => $record->collaborator_id,
                         ]);
                     })
@@ -150,10 +169,10 @@ class TaskBoard extends BoardPage
                         } else {
                             // INICIAR
                             TaskTrackingTime::create([
-                                'task_id'         => $record->id,
+                                'task_id' => $record->id,
                                 'collaborator_id' => auth()->id(),
-                                'start_at'        => now(),
-                                'stop_at'         => null,
+                                'start_at' => now(),
+                                'stop_at' => null,
                             ]);
 
                             Notification::make()
@@ -166,10 +185,10 @@ class TaskBoard extends BoardPage
                         $this->dispatch('refresh');
                     })
             ])
-            ->cardSchema(fn (Schema $schema) => $schema->components([
+            ->cardSchema(fn(Schema $schema) => $schema->components([
                 Grid::make()
-                    ->extraAttributes(fn ($record) => [
-                        'class' => ($record->type_task === 'bug' && in_array($record->priority, ['high','urgent']))
+                    ->extraAttributes(fn($record) => [
+                        'class' => ($record->type_task === 'bug' && in_array($record->priority, ['high', 'urgent']))
                             ? 'bg-red-50 ring-1 ring-red-200 rounded-xl p-2 dark:bg-red-900/20 dark:ring-red-800'
                             : '',
                     ])
@@ -192,11 +211,82 @@ class TaskBoard extends BoardPage
                 Column::make('validation')->label('Validação')->color('warning'),
                 Column::make('ready_to_deploy')->label('Aguardando Deploy')->color('danger'),
                 Column::make('done')->label('Concluído')->color('success'),
+                Column::make('cancelled')->label('Cancelada')->color('danger'),
             ]);
     }
 
     public function getEloquentQuery(): Builder
     {
-        return Task::query()->with(['collaborator', 'activeTracking']);
+        return Task::query()->with(['collaborator', 'activeTracking'])
+            ->where('type_task', '!=', TypeTaskEnum::EPIC->value);
+    }
+
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('new_tas')
+                ->label('Adicionar Task')
+                ->model(Task::class)
+                ->modal()->slideOver()
+                ->modalHeading('Adicionar nova tarefa')
+                ->schema([
+                    ComponentsHelper::BasicInformationsSection(),
+                    ComponentsHelper::VinculeAndResponsible()->columns(2)
+                        ->columnSpan(['md' => 12, 'xl' => 8, '2xl' => 7]),
+                    Section::make('Evidências e Anexos')
+                        ->icon('heroicon-o-paper-clip')
+                        ->description('Faça upload de arquivos relacionados à task')
+                        ->schema([
+                            FileUpload::make('attachments')
+                                ->label(__('modules.tasks.form.attachments.label'))
+                                ->multiple()
+                                ->directory('task-attachments')
+                                ->acceptedFileTypes([
+                                    'image/*',
+                                    'application/pdf',
+                                    'application/msword',
+                                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                    'application/vnd.ms-excel',
+                                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                                ])
+                                ->maxSize(10240)
+                                ->downloadable()
+                                ->openable()
+                                ->afterStateHydrated(function (FileUpload $component, $state, $record) {
+
+                                    if ($record) {
+                                        $component->state(
+                                            $record->evidences()->pluck('file')->all()
+                                        );
+                                    }
+                                })->saveUploadedFileUsing(fn(TemporaryUploadedFile $file) => $file->store('task-attachments'))
+                                ->appendFiles()
+                                ->helperText(__('modules.tasks.form.attachments.helpText'))
+                                ->columnSpanFull(),
+                        ])
+                        ->collapsible()
+                        ->collapsed()
+                        ->columnSpan(['md' => 12, 'xl' => 8, '2xl' => 7]),
+                ])
+                ->action(function (array $data, Action $action): void {
+
+                    $attachments = $data['attachments'] ?? [];
+                    unset($data['attachments']);
+                    $data['applicant_id'] = auth()->id();
+                    /** @var Task $task */
+                    $task = Task::create($data);
+
+                    SyncTaskEvidencesAction::handle($task, $attachments, 'public', false);
+
+                    Notification::make()
+                        ->success()
+                        ->title('Tarefa criada')
+                        ->body('Anexos sincronizados com sucesso.')
+                        ->send();
+
+                    $action->getLivewire()->dispatch('$refresh');
+                })
+        ];
     }
 }
