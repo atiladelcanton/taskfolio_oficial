@@ -28,14 +28,14 @@ class Task extends Model
         'type_task',
         'total_time_worked',
         'priority',
-        'status'
+        'status',
     ];
 
     protected function casts(): array
     {
         return [
             'type_task' => 'string',
-            'priority' => 'string'
+            'priority' => 'string',
         ];
     }
 
@@ -151,16 +151,17 @@ class Task extends Model
     public function getTotalSpentSecondsAttribute(): int
     {
         return (int) $this->trackingTimes()
-            ->selectRaw("COALESCE(SUM(TIMESTAMPDIFF(SECOND, start_at, COALESCE(stop_at, NOW()))), 0) AS seconds")
+            ->selectRaw('COALESCE(SUM(TIMESTAMPDIFF(SECOND, start_at, COALESCE(stop_at, NOW()))), 0) AS seconds')
             ->value('seconds');
     }
 
-// Total formatado HH:MM (sem segundos para ficar compacto no card)
+    // Total formatado HH:MM (sem segundos para ficar compacto no card)
     public function getTotalSpentFormattedAttribute(): string
     {
         $s = $this->total_spent_seconds;
         $h = intdiv($s, 3600);
         $m = intdiv($s % 3600, 60);
+
         return sprintf('%02d:%02d', $h, $m);
     }
 }

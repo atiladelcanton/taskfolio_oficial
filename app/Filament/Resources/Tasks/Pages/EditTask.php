@@ -8,7 +8,6 @@ use App\Actions\Tasks\SyncTaskEvidencesAction;
 use App\Filament\Resources\Tasks\TaskResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use JetBrains\PhpStorm\NoReturn;
 
 class EditTask extends EditRecord
 {
@@ -20,15 +19,17 @@ class EditTask extends EditRecord
 
         SyncTaskEvidencesAction::handle($this->record, $attachments);
     }
+
     protected function getSavedNotificationMessage(): ?string
     {
         return 'Task atualizada com sucesso!';
     }
+
     protected function getRedirectUrl(): string
     {
-
         return route('filament.app.pages.task-board');
     }
+
     protected function getHeaderActions(): array
     {
         return [

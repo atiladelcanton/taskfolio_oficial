@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Tasks;
 
 use App\Enums\TaskStatusEnum;
@@ -7,7 +9,7 @@ use Filament\Notifications\Notification;
 
 class ChangeStatusTaskAction
 {
-    public static function handle($record, array $data,$action=null): void
+    public static function handle($record, array $data, $action = null): void
     {
         $from = $record->status instanceof TaskStatusEnum
             ? $record->status
@@ -20,22 +22,21 @@ class ChangeStatusTaskAction
         if (! $from->canTransitionTo($to)) {
             Notification::make()->danger()
                 ->title('Transição inválida')
-                ->body('De ' . $from->label() . ' para ' . $to->label() . '.')
+                ->body('De '.$from->label().' para '.$to->label().'.')
                 ->send();
+
             return;
         }
 
         $record->status = $to->value;
         $record->save();
 
-
-        if(!is_null($action)){
+        if (! is_null($action)) {
             Notification::make()->success()
                 ->title('Status atualizado')
-                ->body('De ' . $from->label() . ' para ' . $to->label() . '.')
+                ->body('De '.$from->label().' para '.$to->label().'.')
                 ->send();
             $action->getLivewire()->dispatch('$refresh');
         }
-
     }
 }

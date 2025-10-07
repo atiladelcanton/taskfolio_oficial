@@ -1,38 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Pages;
 
-use App\Actions\Tasks\ChangeStatusTaskAction;
-use App\Actions\Tasks\SyncTaskEvidencesAction;
+use App\Actions\Tasks\{ChangeStatusTaskAction, SyncTaskEvidencesAction};
 use App\Enums\TypeTaskEnum;
 use App\Models\Task;
-
 use App\Support\Tasks\ComponentsHelper;
 use BackedEnum;
 use Exception;
 use Filament\Actions\Action;
-
-use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Notifications\Notification;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\{Grid, Section};
 use Filament\Schemas\Schema;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Relaticle\Flowforge\Board;
-use Relaticle\Flowforge\BoardPage;
-use Relaticle\Flowforge\Column;
+use Relaticle\Flowforge\{Board, BoardPage, Column};
 
 class TaskBoard extends BoardPage implements HasActions
 {
-
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-view-columns';
+
     protected static ?string $navigationLabel = 'Tasks';
+
     protected static ?string $title = 'Tasks';
 
     public function moveCard(string $cardId, string $targetColumnId, ?string $afterCardId = null, ?string $beforeCardId = null): void
@@ -60,14 +55,14 @@ class TaskBoard extends BoardPage implements HasActions
                         'bug' => 'Bug',
                         'feature' => 'Feature',
                         'improvement' => 'Melhoria',
-                    ])
+                    ]),
             ])
             ->cardActions(
-              ComponentsHelper::getActionsTaskBoard()
+                ComponentsHelper::getActionsTaskBoard()
             )
-            ->cardSchema(fn(Schema $schema) => $schema->components([
+            ->cardSchema(fn (Schema $schema) => $schema->components([
                 Grid::make()
-                    ->extraAttributes(fn($record) => [
+                    ->extraAttributes(fn ($record) => [
                         'class' => ($record->type_task === 'bug' && in_array($record->priority, ['high', 'urgent']))
                             ? 'bg-red-50 ring-1 ring-red-200 rounded-xl p-2 dark:bg-red-900/20 dark:ring-red-800'
                             : '', ])
@@ -78,7 +73,7 @@ class TaskBoard extends BoardPage implements HasActions
                         ViewEntry::make('collab_time_row')
                             ->view('filament/tasks/cards/collab-time-row') // blade abaixo
                             ->columnSpanFull(),
-                    ])
+                    ]),
             ]))
             ->columns([
                 Column::make('backlog')->label('Planejado')->color('gray'),
@@ -94,10 +89,9 @@ class TaskBoard extends BoardPage implements HasActions
 
     public function getEloquentQuery(): Builder
     {
-        return Task::query()->with(['collaborator', 'activeTracking','evidences'])
+        return Task::query()->with(['collaborator', 'activeTracking', 'evidences'])
             ->where('type_task', '!=', TypeTaskEnum::EPIC->value);
     }
-
 
     protected function getHeaderActions(): array
     {
@@ -131,13 +125,12 @@ class TaskBoard extends BoardPage implements HasActions
                                 ->downloadable()
                                 ->openable()
                                 ->afterStateHydrated(function (FileUpload $component, $state, $record) {
-
                                     if ($record) {
                                         $component->state(
                                             $record->evidences()->pluck('file')->all()
                                         );
                                     }
-                                })->saveUploadedFileUsing(fn(TemporaryUploadedFile $file) => $file->store('task-attachments'))
+                                })->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => $file->store('task-attachments'))
                                 ->appendFiles()
                                 ->helperText(__('modules.tasks.form.attachments.helpText'))
                                 ->columnSpanFull(),
@@ -147,7 +140,6 @@ class TaskBoard extends BoardPage implements HasActions
                         ->columnSpan(['md' => 12, 'xl' => 8, '2xl' => 7]),
                 ])
                 ->action(function (array $data, Action $action): void {
-
                     $attachments = $data['attachments'] ?? [];
                     unset($data['attachments']);
                     $data['applicant_id'] = auth()->id();
@@ -163,7 +155,7 @@ class TaskBoard extends BoardPage implements HasActions
                         ->send();
 
                     $action->getLivewire()->dispatch('$refresh');
-                })
+                }),
         ];
     }
 }

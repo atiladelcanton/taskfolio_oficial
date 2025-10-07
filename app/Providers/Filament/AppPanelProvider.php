@@ -48,7 +48,7 @@ class AppPanelProvider extends PanelProvider
             })
             ->pages([
                 Dashboard::class,
-                TaskBoard::class
+                TaskBoard::class,
             ])
             ->plugins([
                 RenewPasswordPlugin::make()

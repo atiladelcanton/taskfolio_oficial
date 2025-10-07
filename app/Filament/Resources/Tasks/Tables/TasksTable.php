@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Tasks\Tables;
 
-use Filament\Actions\{Action, BulkActionGroup, DeleteBulkAction, EditAction};
 use App\Actions\Tasks\ChangeStatusTaskAction;
 use App\Enums\TaskStatusEnum;
+use Filament\Actions\{Action, EditAction};
 use Filament\Forms\Components\ToggleButtons;
-use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Grouping\Group;
@@ -169,7 +168,7 @@ class TasksTable
                 Group::make('type_task')
                     ->label('Tipo de Task')
                     ->collapsible()
-                    ->getTitleFromRecordUsing(fn ($record) => match($record->type_task) {
+                    ->getTitleFromRecordUsing(fn ($record) => match ($record->type_task) {
                         'epic' => '🎯 Epic',
                         'feature' => '⭐ Feature',
                         'task' => '📋 Task',
@@ -181,7 +180,7 @@ class TasksTable
                 Group::make('status')
                     ->label('Status')
                     ->collapsible()
-                    ->getTitleFromRecordUsing(fn ($record) => match($record->status) {
+                    ->getTitleFromRecordUsing(fn ($record) => match ($record->status) {
                         'backlog' => '📥 Backlog',
                         'refinement' => '🔍 Refinamento',
                         'todo' => '📝 To Do',
@@ -265,13 +264,14 @@ class TasksTable
                                 if ($record->status instanceof TaskStatusEnum) {
                                     return $record->status->value;
                                 }
-                                return \App\Enums\TaskStatusEnum::tryFrom((string) $record->status)?->value
-                                    ?? \App\Enums\TaskStatusEnum::Backlog->value;
+
+                                return TaskStatusEnum::tryFrom((string) $record->status)?->value
+                                    ?? TaskStatusEnum::Backlog->value;
                             }),
                     ])
-                    ->action(function ($record, array $data,Action $action) {
-                        ChangeStatusTaskAction::handle($record,$data,$action);
-                    })
+                    ->action(function ($record, array $data, Action $action) {
+                        ChangeStatusTaskAction::handle($record, $data, $action);
+                    }),
 
             ])
             ->emptyStateHeading('Nenhuma task encontrada')

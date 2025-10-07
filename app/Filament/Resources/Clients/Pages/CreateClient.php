@@ -21,7 +21,9 @@ class CreateClient extends CreateRecord
     private ?User $user;
 
     protected static bool $canCreateAnother = false;
-    private string $password='';
+
+    private string $password = '';
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $password = Str::random(8);

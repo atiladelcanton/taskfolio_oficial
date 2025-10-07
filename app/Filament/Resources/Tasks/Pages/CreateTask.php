@@ -18,13 +18,14 @@ class CreateTask extends CreateRecord
 
         return $data;
     }
+
     protected function afterCreate(): void
     {
-
         $attachments = $this->form->getComponent('attachments')->getState() ?? [];
 
         SyncTaskEvidencesAction::handle($this->record, $attachments);
     }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

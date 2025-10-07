@@ -10,16 +10,13 @@ use App\Models\{Task, TaskTrackingTime};
 use Closure;
 use Filament\Actions\{Action, Action as ModalAction};
 use Filament\Forms\Components\{FileUpload, Repeater\TableColumn, RichEditor, Select, TextInput, ToggleButtons};
-use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\{RepeatableEntry, TextEntry};
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\{Grid, Section};
 use Filament\Schemas\Components\Utilities\{Get, Set};
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\HtmlString;
-use Illuminate\Support\Str;
-use Storage;
+use Illuminate\Support\{HtmlString, Str};
 
 class ComponentsHelper
 {
@@ -124,16 +121,16 @@ class ComponentsHelper
             ->afterStateUpdated(function ($state, Set $set, Get $get) {
                 $set('parent_id', null);
             })->rules([
-                fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                     $parentId = $get('parent_id');
 
-                    if (!$parentId) {
+                    if (! $parentId) {
                         return;
                     }
 
                     $parent = Task::query()->find($parentId);
 
-                    if (!$parent) {
+                    if (! $parent) {
                         return;
                     }
                     // Regra 1: EPIC só pode ter FEATURE como filha
@@ -141,7 +138,7 @@ class ComponentsHelper
                         $fail('Uma EPIC só pode ter tarefas do tipo FEATURE como filhas diretas.');
                     }
                     // Regra 2: FEATURE só pode ter TASK, BUG ou IMPROVEMENT como filha
-                    if ($parent->type_task === 'feature' && !in_array($value, ['task', 'bug', 'improvement'])) {
+                    if ($parent->type_task === 'feature' && ! in_array($value, ['task', 'bug', 'improvement'])) {
                         $fail('Uma FEATURE só pode ter tarefas do tipo TASK, BUG ou MELHORIA como filhas.');
                     }
                     // Regra 3: TASK não pode ter EPIC nem FEATURE como filha
@@ -212,23 +209,23 @@ class ComponentsHelper
                 Select::make('project_id')
                     ->label(__('modules.tasks.form.project_id.label'))
                     ->prefixIcon('heroicon-o-briefcase')
-                    ->options(fn() => ListProjectsByLoggedUser::handle())
+                    ->options(fn () => ListProjectsByLoggedUser::handle())
                     ->preload()
                     ->searchable()
                     ->required()
                     ->live()
-                    ->afterStateUpdated(fn(Set $set) => $set('sprint_id', null))
+                    ->afterStateUpdated(fn (Set $set) => $set('sprint_id', null))
                     ->helperText(__('modules.tasks.form.project_id.helpText'))
                     ->columnSpanFull(),
 
                 Select::make('sprint_id')
                     ->label('Sprint')
                     ->prefixIcon('heroicon-o-rocket-launch')
-                    ->options(fn(Get $get) => $get('project_id') == null ? [] : ListSprintsByProject::handle($get('project_id')))
+                    ->options(fn (Get $get) => $get('project_id') == null ? [] : ListSprintsByProject::handle($get('project_id')))
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->disabled(fn(Get $get) => !$get('project_id'))
+                    ->disabled(fn (Get $get) => ! $get('project_id'))
                     ->helperText(__('modules.tasks.form.sprint_id.helpText'))
                     ->live()
                     ->native(false),
@@ -240,7 +237,7 @@ class ComponentsHelper
                         $sprintId = $get('sprint_id');
                         $currentType = $get('type_task');
 
-                        if (!$sprintId) {
+                        if (! $sprintId) {
                             return [];
                         }
 
@@ -278,7 +275,7 @@ class ComponentsHelper
                     })
                     ->searchable()
                     ->preload()
-                    ->disabled(fn(Get $get) => !$get('sprint_id') || $get('type_task') === 'epic')
+                    ->disabled(fn (Get $get) => ! $get('sprint_id') || $get('type_task') === 'epic')
                     ->helperText(function (Get $get) {
                         $type = $get('type_task');
 
@@ -291,15 +288,15 @@ class ComponentsHelper
                     })
                     ->live()
                     ->rules([
-                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                            if (!$value) {
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (! $value) {
                                 return; // Parent é opcional
                             }
 
                             $currentType = $get('type_task');
                             $parent = Task::find($value);
 
-                            if (!$parent) {
+                            if (! $parent) {
                                 return;
                             }
 
@@ -311,7 +308,7 @@ class ComponentsHelper
                             }
 
                             // Se o pai é FEATURE, só pode ser TASK/BUG/IMPROVEMENT
-                            if ($parent->type_task === 'feature' && !in_array($currentType, ['task', 'bug', 'improvement'])) {
+                            if ($parent->type_task === 'feature' && ! in_array($currentType, ['task', 'bug', 'improvement'])) {
                                 $fail('Esta FEATURE só pode ter TASKs, BUGs ou MELHORIAs como filhas.');
                             }
 
@@ -387,7 +384,7 @@ class ComponentsHelper
             ->modalHeading('Cronômetro & Histórico')
             ->modalWidth('xl')
             ->modalIcon('heroicon-m-clock')
-            ->modalSubmitActionLabel(fn($record) => $record->activeTracking ? 'Pausar' : 'Iniciar')
+            ->modalSubmitActionLabel(fn ($record) => $record->activeTracking ? 'Pausar' : 'Iniciar')
             ->modalCancelActionLabel('Fechar')
             ->extraModalFooterActions([
                 ModalAction::make('assumir')
@@ -400,7 +397,7 @@ class ComponentsHelper
                     })
                     ->icon('heroicon-m-user-plus')
                     ->color('primary')
-                    ->disabled(fn($record) => $record->collaborator_id === Auth::id())
+                    ->disabled(fn ($record) => $record->collaborator_id === Auth::id())
                     ->action(function ($record) {
                         $record->update(['collaborator_id' => Auth::id()]);
                         Notification::make()
@@ -408,7 +405,6 @@ class ComponentsHelper
                             ->title('Tarefa assumida')
                             ->body('Você agora é o colaborador responsável por esta tarefa.')
                             ->send();
-
                     }),
             ])
             ->modalContent(function ($record) {
@@ -418,7 +414,7 @@ class ComponentsHelper
                     ->where('task_id', $record->id)
                     ->orderBy('start_at', 'desc')
                     ->get()
-                    ->groupBy(fn($t) => $t->start_at->timezone($tz)->toDateString())
+                    ->groupBy(fn ($t) => $t->start_at->timezone($tz)->toDateString())
                     ->map(function ($group) {
                         return $group->sum(function ($t) {
                             $end = $t->stop_at ?? now();
@@ -454,7 +450,7 @@ class ComponentsHelper
                     'grand' => $grand,             // total geral em segundos
                     'format' => $format,
                     'tz' => $tz,
-                    'active' => (bool)$activeTracking,
+                    'active' => (bool) $activeTracking,
                     'currentSince' => $currentSince,
                     'currentSeconds' => $currentSeconds,
                     'collaborator' => $record->collaborator->name ?? null,
@@ -494,14 +490,13 @@ class ComponentsHelper
                         ->body('Cronômetro em execução')
                         ->send();
                 }
-
             });
     }
 
     private static function ShowDetailTask(): Action
     {
         return Action::make('taskDetails')
-            ->modalHeading(fn(Task $record) => "Detalhes — {$record->title}")
+            ->modalHeading(fn (Task $record) => "Detalhes — {$record->title}")
             ->icon(Heroicon::OutlinedEye)
             ->modalWidth('5xl')
             ->modalSubmitAction(false)
@@ -512,7 +507,7 @@ class ComponentsHelper
                     ->label('Editar')
                     ->icon('heroicon-m-pencil-square')
                     ->color('primary')
-                    ->url(fn(Task $record) => route('filament.app.resources.tasks.edit', $record->id).'?redirectTo=taskboard',true)
+                    ->url(fn (Task $record) => route('filament.app.resources.tasks.edit', $record->id).'?redirectTo=taskboard', true),
             ])
             ->schema([
                 Grid::make(12)->schema([
@@ -528,8 +523,11 @@ class ComponentsHelper
                     TextEntry::make('priority')
                         ->label('Prioridade')->badge()
                         ->icon(function ($state) {
-                            if ($state === null) return '';
-                            $raw = trim((string)$state);
+                            if ($state === null) {
+                                return '';
+                            }
+                            $raw = trim((string) $state);
+
                             return match ($raw) {
                                 'low' => 'heroicon-m-arrow-down',
                                 'medium' => 'heroicon-m-minus',
@@ -538,8 +536,11 @@ class ComponentsHelper
                             };
                         })
                         ->color(function ($state) {
-                            if ($state === null) return '';
-                            $raw = trim((string)$state);
+                            if ($state === null) {
+                                return '';
+                            }
+                            $raw = trim((string) $state);
+
                             return match ($raw) {
                                 'low' => 'gray',
                                 'medium' => 'info',
@@ -548,8 +549,11 @@ class ComponentsHelper
                             };
                         })
                         ->formatStateUsing(function ($state) {
-                            if ($state === null) return '';
-                            $raw = trim((string)$state);
+                            if ($state === null) {
+                                return '';
+                            }
+                            $raw = trim((string) $state);
+
                             return match ($raw) {
                                 'low' => 'Baixa',
                                 'medium' => 'Média',
@@ -578,7 +582,7 @@ class ComponentsHelper
                             ->markdown()
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn(Task $record) => !is_null($record->accept_criteria)),
+                    ->visible(fn (Task $record) => ! is_null($record->accept_criteria)),
                 Section::make('scene_test')
                     ->heading(__('modules.tasks.form.scene_test.label'))
                     ->collapsible()
@@ -589,7 +593,7 @@ class ComponentsHelper
                             ->markdown()
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn(Task $record) => !is_null($record->scene_test)),
+                    ->visible(fn (Task $record) => ! is_null($record->scene_test)),
                 Section::make('ovservations')
                     ->heading(__('modules.tasks.form.ovservations.label'))
                     ->collapsible()
@@ -600,7 +604,7 @@ class ComponentsHelper
                             ->markdown()
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn(Task $record) => !is_null($record->ovservations)),
+                    ->visible(fn (Task $record) => ! is_null($record->ovservations)),
                 RepeatableEntry::make('evidences')
                     ->emptyTooltip('Nenhuma evidencia fornecida')
                     ->table([
@@ -610,10 +614,10 @@ class ComponentsHelper
                     ->schema([
                         TextEntry::make('file')
                             ->label('Arquivo')
-                            ->formatStateUsing(fn($state) => Str::of((string)$state)->afterLast('/')),
+                            ->formatStateUsing(fn ($state) => Str::of((string) $state)->afterLast('/')),
                         TextEntry::make('file')
                             ->label('Download')
-                            ->formatStateUsing(function ($record,$state) {
+                            ->formatStateUsing(function ($record, $state) {
                                 $url = \URL::temporarySignedRoute(
                                     'force_download',
                                     now()->addMinutes(2),
@@ -627,8 +631,7 @@ class ComponentsHelper
                                 );
                             }),
                     ])
-                    ->columnSpanFull()
-
+                    ->columnSpanFull(),
 
             ]);
     }
