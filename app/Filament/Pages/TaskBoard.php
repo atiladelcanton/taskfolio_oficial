@@ -26,9 +26,9 @@ class TaskBoard extends BoardPage implements HasActions
 {
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-view-columns';
 
-    protected static ?string $navigationLabel = 'Tasks';
+    protected static ?string $navigationLabel = 'Tasks Board';
 
-    protected static ?string $title = 'Tasks';
+    protected static ?string $title = 'Tasks Board';
 
     public function moveCard(string $cardId, string $targetColumnId, ?string $afterCardId = null, ?string $beforeCardId = null): void
     {

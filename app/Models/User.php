@@ -11,13 +11,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Yebor974\Filament\RenewPassword\Contracts\RenewPasswordContract;
 use Yebor974\Filament\RenewPassword\Traits\RenewPassword;
-
+use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements RenewPasswordContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use Notifiable;
-
+    use HasRoles;
     use RenewPassword;
 
     /**

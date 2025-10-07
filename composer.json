@@ -13,6 +13,7 @@
         "livewire/volt": "^1.7.0",
         "lucascudo/laravel-pt-br-localization": "^3.0",
         "relaticle/flowforge": "^2.0",
+        "spatie/laravel-permission": "^6.21",
         "yebor974/filament-renew-password": "^3.0"
     },
     "require-dev": {
