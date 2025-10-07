@@ -12,7 +12,7 @@
 
         @if ($active)
             <p class="text-sm text-gray-600">
-                Iniciado em: <strong>{{ $currentSince->locale(app()->getLocale())->translatedFormat('dd/MM/yyyy HH:mm') }}</strong> ({{ $tz }})
+                Iniciado em: <strong>{{ $currentSince->locale(app()->getLocale())->format('d/m/Y H:i') }}</strong> ({{ $tz }})
             </p>
             <p class="text-2xl font-mono">
                 {{ $format($currentSeconds) }}
@@ -36,7 +36,7 @@
             @forelse($rows as $day => $seconds)
                 <tr>
                     <td class="px-4 py-2 text-sm">
-                        {{ \Carbon\Carbon::parse($day, $tz)->locale(app()->getLocale())->translatedFormat('dd/MM/yyyy (eee)') }}
+                        {{ $currentSince->locale(app()->getLocale())->format('d/m/Y H:i') }} ({{ $tz }})
                     </td>
                     <td class="px-4 py-2 text-sm text-right font-mono">
                         {{ $format($seconds) }}

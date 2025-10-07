@@ -35,6 +35,7 @@ class Task extends Model
     {
         return [
             'type_task' => 'string',
+            'priority' => 'string'
         ];
     }
 

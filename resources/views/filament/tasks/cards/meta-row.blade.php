@@ -11,7 +11,6 @@
     $typeIcons  = ['epic'=>'heroicon-m-sparkles','task'=>'heroicon-m-clipboard-document-check','bug'=>'heroicon-m-bug-ant','feature'=>'heroicon-m-sparkles','improvement'=>'heroicon-m-wrench-screwdriver'];
     $typeColors = ['epic'=>'info','task'=>'primary','bug'=>'danger','feature'=>'success','improvement'=>'warning'];
 
-    // ===== Helpers p/ cores (bg/text/ring) =====
     $tone = fn(string $color) => match($color) {
         'gray'    => 'bg-gray-50 text-gray-700 ring-gray-200 dark:bg-gray-900/30 dark:text-gray-300 dark:ring-gray-800',
         'info'    => 'bg-sky-50 text-sky-700 ring-sky-200 dark:bg-sky-900/30 dark:text-sky-300 dark:ring-sky-800',
