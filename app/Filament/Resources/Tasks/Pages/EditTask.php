@@ -16,9 +16,9 @@ class EditTask extends EditRecord
 
     protected function afterSave(): void
     {
-        $attachments = $this->form->getState()['attachments'] ?? [];
+        $attachments = $this->form->getComponent('attachments')->getState() ?? [];
 
-        SyncTaskEvidencesAction::handle($this->record, $attachments, 'public', false);
+        SyncTaskEvidencesAction::handle($this->record, $attachments);
     }
     protected function getSavedNotificationMessage(): ?string
     {

@@ -36,7 +36,7 @@
             @forelse($rows as $day => $seconds)
                 <tr>
                     <td class="px-4 py-2 text-sm">
-                        {{ $currentSince->locale(app()->getLocale())->format('d/m/Y H:i') }} ({{ $tz }})
+                        {{ \Carbon\Carbon::parse($day, $tz)->locale(app()->getLocale())->translatedFormat('d/m/Y') }}
                     </td>
                     <td class="px-4 py-2 text-sm text-right font-mono">
                         {{ $format($seconds) }}

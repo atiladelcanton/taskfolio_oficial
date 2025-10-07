@@ -32,8 +32,8 @@ class TaskBoard extends BoardPage implements HasActions
 {
 
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-view-columns';
-    protected static ?string $navigationLabel = 'Task Board';
-    protected static ?string $title = 'Task Board';
+    protected static ?string $navigationLabel = 'Tasks';
+    protected static ?string $title = 'Tasks';
 
     public function moveCard(string $cardId, string $targetColumnId, ?string $afterCardId = null, ?string $beforeCardId = null): void
     {
@@ -154,7 +154,7 @@ class TaskBoard extends BoardPage implements HasActions
                     /** @var Task $task */
                     $task = Task::create($data);
 
-                    SyncTaskEvidencesAction::handle($task, $attachments, 'public', false);
+                    SyncTaskEvidencesAction::handle($task, $attachments);
 
                     Notification::make()
                         ->success()

@@ -17,7 +17,7 @@ class SyncTaskEvidencesAction
      * @param string $disk   Disk do Storage (ex.: 'public')
      * @param bool   $deleteMissingFiles Se true, remove os arquivos do Storage removidos do form
      */
-    public static function handle(Task|Model $task, array $paths, string $disk = 'public', bool $deleteMissingFiles = false): void
+    public static function handle(Task|Model $task, array $paths, bool $deleteMissingFiles = false): void
     {
         $paths   = array_values(array_filter(\Arr::wrap($paths)));
         $current = $task->evidences()->pluck('file')->all();
@@ -40,7 +40,7 @@ class SyncTaskEvidencesAction
 
             foreach ($evidences as $evidence) {
                 if ($deleteMissingFiles) {
-                    Storage::disk($disk)->delete($evidence->file);
+                    Storage::delete($evidence->file);
                 }
                 $evidence->delete();
             }

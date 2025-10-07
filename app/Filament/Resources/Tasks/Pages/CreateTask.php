@@ -23,7 +23,7 @@ class CreateTask extends CreateRecord
 
         $attachments = $this->form->getComponent('attachments')->getState() ?? [];
 
-        SyncTaskEvidencesAction::handle($this->record, $attachments, 'public', false);
+        SyncTaskEvidencesAction::handle($this->record, $attachments);
     }
     protected function getRedirectUrl(): string
     {

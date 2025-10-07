@@ -353,7 +353,7 @@ class ComponentsHelper
                     ->downloadable()
                     ->openable()
                     ->preserveFilenames()
-                    ->dehydrated(false)              // <- não salva em tasks
+                    ->dehydrated(false)
                     ->afterStateHydrated(function (FileUpload $component, $state, $record) {
                         if ($record) {
                             $component->state(
@@ -560,7 +560,6 @@ class ComponentsHelper
                         ->columnSpan(3),
                 ]),
                 Section::make('description')
-
                     ->heading(__('modules.tasks.form.description.label'))
                     ->collapsible()
                     ->schema([
@@ -614,10 +613,13 @@ class ComponentsHelper
                             ->formatStateUsing(fn($state) => Str::of((string)$state)->afterLast('/')),
                         TextEntry::make('file')
                             ->label('Download')
-                            ->html()
-                            ->formatStateUsing(function ($state) {
-                                if (!$state) return new HtmlString('<span class="text-gray-400">—</span>');
-                                $url = Storage::disk('public')->url($state);
+                            ->formatStateUsing(function ($record,$state) {
+                                $url = \URL::temporarySignedRoute(
+                                    'force_download',
+                                    now()->addMinutes(2),
+                                    ['evidence' => $record->id]
+                                );
+
                                 return new HtmlString(
                                     "<a href=\"{$url}\" target=\"_blank\" class=\"inline-flex items-center gap-1 text-primary-600 hover:underline\">
                                             <span>Download</span>
