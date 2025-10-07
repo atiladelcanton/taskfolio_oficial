@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Tasks\Schemas;
 
 use App\Support\Tasks\ComponentsHelper;
+use Filament\Forms\Components\RichEditor;
 use Filament\Schemas\Components\{Group};
 use Filament\Schemas\Schema;
 
@@ -15,7 +16,9 @@ class TaskForm
         return $schema
             ->columns(12)
             ->components([
+
                 ComponentsHelper::BasicInformationsSection(),
+
                 Group::make([
                     ComponentsHelper::VinculeAndResponsible()->columns(2),
                     ComponentsHelper::AttachEvidences(),

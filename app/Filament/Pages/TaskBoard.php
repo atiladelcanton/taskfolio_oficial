@@ -6,12 +6,14 @@ use App\Actions\Tasks\ChangeStatusTaskAction;
 use App\Actions\Tasks\SyncTaskEvidencesAction;
 use App\Enums\TypeTaskEnum;
 use App\Models\Task;
-use App\Models\TaskTrackingTime;
+
 use App\Support\Tasks\ComponentsHelper;
 use BackedEnum;
 use Exception;
 use Filament\Actions\Action;
-use Filament\Actions\Action as ModalAction;
+
+use Filament\Actions\Concerns\InteractsWithActions;
+use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Notifications\Notification;
@@ -20,14 +22,15 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
+
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
 use Relaticle\Flowforge\Column;
 
-class TaskBoard extends BoardPage
+class TaskBoard extends BoardPage implements HasActions
 {
+
     protected static string|null|BackedEnum $navigationIcon = 'heroicon-o-view-columns';
     protected static ?string $navigationLabel = 'Task Board';
     protected static ?string $title = 'Task Board';

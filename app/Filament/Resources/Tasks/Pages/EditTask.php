@@ -13,12 +13,21 @@ use JetBrains\PhpStorm\NoReturn;
 class EditTask extends EditRecord
 {
     protected static string $resource = TaskResource::class;
-    #[NoReturn]
+
     protected function afterSave(): void
     {
         $attachments = $this->form->getState()['attachments'] ?? [];
 
         SyncTaskEvidencesAction::handle($this->record, $attachments, 'public', false);
+    }
+    protected function getSavedNotificationMessage(): ?string
+    {
+        return 'Task atualizada com sucesso!';
+    }
+    protected function getRedirectUrl(): string
+    {
+
+        return route('filament.app.pages.task-board');
     }
     protected function getHeaderActions(): array
     {

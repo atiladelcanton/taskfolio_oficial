@@ -495,7 +495,6 @@ class ComponentsHelper
                         ->send();
                 }
 
-                $this->dispatch('refresh');
             });
     }
 
@@ -504,10 +503,17 @@ class ComponentsHelper
         return Action::make('taskDetails')
             ->modalHeading(fn(Task $record) => "Detalhes — {$record->title}")
             ->icon(Heroicon::OutlinedEye)
-            ->modalWidth('4xl')
+            ->modalWidth('5xl')
             ->modalSubmitAction(false)
             ->modalCancelActionLabel('Fechar')
             ->label('Detalhes')
+            ->modalFooterActions(fn (Task $record) => [
+                ModalAction::make('edit_from_details')
+                    ->label('Editar')
+                    ->icon('heroicon-m-pencil-square')
+                    ->color('primary')
+                    ->url(fn(Task $record) => route('filament.app.resources.tasks.edit', $record->id).'?redirectTo=taskboard',true)
+            ])
             ->schema([
                 Grid::make(12)->schema([
                     TextEntry::make('project.project_name')
@@ -554,7 +560,8 @@ class ComponentsHelper
                         ->columnSpan(3),
                 ]),
                 Section::make('description')
-                    ->heading('Descrição')
+
+                    ->heading(__('modules.tasks.form.description.label'))
                     ->collapsible()
                     ->schema([
                         TextEntry::make('description')
@@ -562,8 +569,8 @@ class ComponentsHelper
                             ->markdown()
                             ->columnSpanFull(),
                     ]),
-                Section::make('description')
-                    ->heading('Criterio de Aceite')
+                Section::make('accept_criteria')
+                    ->heading(__('modules.tasks.form.accept_criteria.label'))
                     ->collapsible()
                     ->collapsed(true)
                     ->schema([
@@ -573,8 +580,8 @@ class ComponentsHelper
                             ->columnSpanFull(),
                     ])
                     ->visible(fn(Task $record) => !is_null($record->accept_criteria)),
-                Section::make('description')
-                    ->heading('Cenario de Teste')
+                Section::make('scene_test')
+                    ->heading(__('modules.tasks.form.scene_test.label'))
                     ->collapsible()
                     ->collapsed(true)
                     ->schema([
@@ -584,7 +591,17 @@ class ComponentsHelper
                             ->columnSpanFull(),
                     ])
                     ->visible(fn(Task $record) => !is_null($record->scene_test)),
-
+                Section::make('ovservations')
+                    ->heading(__('modules.tasks.form.ovservations.label'))
+                    ->collapsible()
+                    ->collapsed(true)
+                    ->schema([
+                        TextEntry::make('scene_test')
+                            ->hiddenLabel(true)
+                            ->markdown()
+                            ->columnSpanFull(),
+                    ])
+                    ->visible(fn(Task $record) => !is_null($record->ovservations)),
                 RepeatableEntry::make('evidences')
                     ->emptyTooltip('Nenhuma evidencia fornecida')
                     ->table([
