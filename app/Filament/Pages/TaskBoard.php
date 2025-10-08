@@ -45,6 +45,7 @@ class TaskBoard extends BoardPage implements HasActions
             ->query($this->getEloquentQuery())
             ->recordTitleAttribute('title')
             ->columnIdentifier('status')
+
             ->positionIdentifier('position')
             ->searchable(['title', 'description', 'collaborator.name'])
             ->filters([

@@ -15,7 +15,7 @@ class ListProjects extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Novo Projeto'),
+            CreateAction::make()->label('Novo Projeto')->visible(auth()->user()->can('project.create')),
         ];
     }
 }

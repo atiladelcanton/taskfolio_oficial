@@ -26,6 +26,15 @@ class RolesAndPermissionsSeeder extends Seeder
 
             // TaskBoard
             'task.move',
+
+            // Clients
+            'client.view', 'client.create', 'client.update', 'client.delete',
+
+            // Projects
+            'project.view', 'project.create', 'project.update', 'clieproject.delete',
+
+            // Collaborators
+            'collaborator.view', 'collaborator.create', 'collaborator.update', 'collaborator.delete','collaborator.attach','collaborator.detach'
         ];
 
         foreach ($permissions as $name) {
@@ -51,12 +60,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'task.view', 'task.create', 'task.update',
         ]);
 
-        // COLLABORATOR:
-        // - Vê (por policy) projetos/tasks ligados a ele
-        // - Pode criar/editar tasks
-        // - Pode mover no board
         $collab->syncPermissions([
-            'project.view',
             'sprint.view',
             'task.view', 'task.create', 'task.update',
             'task.move',

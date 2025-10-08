@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Collaborators\Pages;
 
+use App\Enums\Enums\UserTypeEnum;
 use App\Filament\Resources\Collaborators\CollaboratorResource;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\EditRecord;
@@ -18,7 +19,7 @@ class EditCollaborator extends EditRecord
     {
         // Carrega o type do usuário para o campo user_type
         if ($this->record->user) {
-            $data['user_type'] = $this->record->user->type;
+            $data['user_type'] = $this->record->user->role;
         }
 
         return $data;
@@ -26,10 +27,9 @@ class EditCollaborator extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
+
         if (isset($data['user_type']) && $this->record->user) {
-            $this->record->user->update([
-                'type' => $data['user_type'],
-            ]);
+            $this->record->user->assignRole(UserTypeEnum::getRoleName($data['user_type']));
         }
 
         unset($data['user_type']);

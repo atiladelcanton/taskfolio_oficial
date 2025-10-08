@@ -67,4 +67,14 @@ class User extends Authenticatable implements RenewPasswordContract
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
     }
+
+    protected static function booted(): void
+    {
+        static::creating(function ($user) {
+            if (blank($user->password)) {
+                $user->password = \Hash::make(\Illuminate\Support\Str::random(16));
+                $user->force_renew_password = true;
+            }
+        });
+    }
 }

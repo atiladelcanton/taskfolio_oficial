@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Collaborators\Pages;
 
+use App\Enums\Enums\UserTypeEnum;
 use App\Filament\Resources\Collaborators\CollaboratorResource;
 use App\Mail\Welcome;
 use App\Models\User;
@@ -30,13 +31,11 @@ class CreateCollaborator extends CreateRecord
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($password),
-                'type' => $data['user_type'],
                 'force_renew_password' => true,
             ]);
-
+        $user->assignRole(UserTypeEnum::getRoleName($data['user_type']));
         $data['user_id'] = $user->id;
         $this->user = $user;
-        unset($data['user_type']);
 
         return $data;
     }

@@ -79,6 +79,7 @@ class CollaboratorsRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->visible(fn ($record) => auth()->user()->can('collaborator.attach'))
                     ->label('Vincular Projeto')
                     ->modalHeading('Vincular ao Projeto')
                     ->modalDescription('Vincule o colaborador a um projeto e informe quanto ele vai receber nesse projeto')
@@ -143,6 +144,7 @@ class CollaboratorsRelationManager extends RelationManager
             ->recordActions([
                 EditAction::make()
                     ->label('Editar')
+                    ->visible(fn ($record) => auth()->user()->can('collaborator.update'))
                     ->modalHeading('Editar Vínculo do Projeto')
                     ->modalDescription('Atualize o valor e tipo de pagamento do colaborador neste projeto')
                     ->modalSubmitActionLabel('Salvar')
@@ -194,6 +196,7 @@ class CollaboratorsRelationManager extends RelationManager
                         .'Deseja continuar?'
                     ))
                     ->modalSubmitActionLabel('Sim, remover')
+                    ->visible(fn ($record) => auth()->user()->can('collaborator.detach'))
                     ->modalCancelActionLabel('Cancelar')
                     ->modalIcon('heroicon-o-exclamation-triangle')
                     ->color('danger'),
