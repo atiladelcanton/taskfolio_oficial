@@ -13,7 +13,7 @@ class ListProjectsByLoggedUser
     public static function handle(): Collection
     {
         $userId = auth()->id();
-        if (auth()->user()->type !== UserTypeEnum::ADMINISTRADOR->value) {
+        if (!auth()->user()->hasRole('ADMINISTRATOR')) {
             $owned = Project::query()->whereHas('client', fn ($q) => $q->where('user_id', $userId))->get();
             $collab = Project::query()->whereHas('collaborators', fn ($q) => $q->where('user_id', $userId))->get();
             $all = $owned->merge($collab)->unique('id');
