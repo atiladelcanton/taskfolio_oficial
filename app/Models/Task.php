@@ -67,7 +67,7 @@ class Task extends Model
 
     public function collaborator()
     {
-        return $this->belongsTo(User::class, 'collaborator_id')->where('type', UserTypeEnum::COLLABORATOR->value);
+        return $this->belongsTo(Collaborator::class, 'collaborator_id');
     }
 
     public function comments()
