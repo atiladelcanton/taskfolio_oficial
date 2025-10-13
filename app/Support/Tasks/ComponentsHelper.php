@@ -6,6 +6,7 @@ namespace App\Support\Tasks;
 
 use App\Actions\Projects\ListProjectsByLoggedUser;
 use App\Actions\Sprints\ListSprintsByProject;
+use App\Enums\TaskStatusEnum;
 use App\Models\{Task, TaskTrackingTime};
 use Closure;
 use Filament\Actions\{Action, Action as ModalAction};
@@ -386,6 +387,7 @@ class ComponentsHelper
             ->modalIcon('heroicon-m-clock')
             ->modalSubmitActionLabel(fn ($record) => $record->activeTracking ? 'Pausar' : 'Iniciar')
             ->modalCancelActionLabel('Fechar')
+            ->visible(fn($record) => $record->status === TaskStatusEnum::Doing->value)
             ->extraModalFooterActions([
                 ModalAction::make('assumir')
                     ->label(function ($record) {
