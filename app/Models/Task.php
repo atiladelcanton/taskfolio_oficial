@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\Enums\UserTypeEnum;
 use App\Enums\TaskType;
+use App\Enums\TypeTaskEnum;
+use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
-    /** @use HasFactory<\Database\Factories\TaskFactory> */
+    /** @use HasFactory<TaskFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -31,41 +33,34 @@ class Task extends Model
         'status',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'type_task' => 'string',
-            'priority' => 'string',
-        ];
-    }
-
-    // Relacionamentos
     public function sprint()
     {
         return $this->belongsTo(Sprint::class);
     }
+
+    // Relacionamentos
 
     public function project()
     {
         return $this->belongsTo(Project::class);
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
-    public function children()
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany|Task
     {
         return $this->hasMany(self::class, 'parent_id');
     }
 
-    public function applicant()
+    public function applicant(): BelongsTo
     {
         return $this->belongsTo(User::class, 'applicant_id');
     }
 
-    public function collaborator()
+    public function collaborator(): BelongsTo
     {
         return $this->belongsTo(Collaborator::class, 'collaborator_id');
     }
@@ -80,28 +75,23 @@ class Task extends Model
         return $this->hasMany(TaskEvidence::class);
     }
 
-    public function trackingTimes()
+    public function getIsEpicAttribute(): bool
     {
-        return $this->hasMany(TaskTrackingTime::class);
-    }
-
-    // Acessors
-    public function getIsEpicAttribute()
-    {
-        return $this->type_task === TaskType::EPIC;
+        return $this->type_task === TypeTaskEnum::EPIC;
     }
 
     public function getIsBugAttribute()
     {
-        return $this->type_task === TaskType::BUG;
+        return $this->type_task === TypeTaskEnum::BUG;
     }
+
+    // Acessors
 
     public function getIsTaskAttribute()
     {
-        return $this->type_task === TaskType::TASK;
+        return $this->type_task === TypeTaskEnum::TASK;
     }
 
-    // Scopes
     public function scopeByType($query, $type)
     {
         return $query->where('type_task', $type);
@@ -109,17 +99,19 @@ class Task extends Model
 
     public function scopeEpics($query)
     {
-        return $query->where('type_task', TaskType::EPIC);
+        return $query->where('type_task', TypeTaskEnum::EPIC);
     }
+
+    // Scopes
 
     public function scopeBugs($query)
     {
-        return $query->where('type_task', TaskType::BUG);
+        return $query->where('type_task', TypeTaskEnum::BUG);
     }
 
     public function scopeTasks($query)
     {
-        return $query->where('type_task', TaskType::TASK);
+        return $query->where('type_task', TypeTaskEnum::TASK);
     }
 
     public function scopeAssignedTo($query, $userId)
@@ -147,7 +139,11 @@ class Task extends Model
         $this->update(['total_time_worked' => $totalHours]);
     }
 
-    // Total em segundos (inclui sessão ativa)
+    public function trackingTimes()
+    {
+        return $this->hasMany(TaskTrackingTime::class);
+    }
+
     public function getTotalSpentSecondsAttribute(): int
     {
         return (int) $this->trackingTimes()
@@ -155,7 +151,8 @@ class Task extends Model
             ->value('seconds');
     }
 
-    // Total formatado HH:MM (sem segundos para ficar compacto no card)
+    // Total em segundos (inclui sessão ativa)
+
     public function getTotalSpentFormattedAttribute(): string
     {
         $s = $this->total_spent_seconds;
@@ -163,5 +160,15 @@ class Task extends Model
         $m = intdiv($s % 3600, 60);
 
         return sprintf('%02d:%02d', $h, $m);
+    }
+
+    // Total formatado HH:MM (sem segundos para ficar compacto no card)
+
+    protected function casts(): array
+    {
+        return [
+            'type_task' => 'string',
+            'priority' => 'string',
+        ];
     }
 }

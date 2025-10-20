@@ -7,7 +7,7 @@ namespace App\Support\Tasks;
 use App\Actions\Projects\ListProjectsByLoggedUser;
 use App\Actions\Sprints\ListSprintsByProject;
 use App\Enums\TaskStatusEnum;
-use App\Models\{Task, TaskTrackingTime};
+use App\Models\{Collaborator, Task, TaskTrackingTime};
 use Closure;
 use Filament\Actions\{Action, Action as ModalAction};
 use Filament\Forms\Components\{FileUpload, Repeater\TableColumn, RichEditor, Select, TextInput, ToggleButtons};
@@ -393,15 +393,15 @@ class ComponentsHelper
                     ->label(function ($record) {
                         $current = $record->collaborator->name ?? null;
 
-                        return $record->collaborator_id === Auth::id()
+                        return $record->collaborator_id ===  $record->collaborator->id
                             ? 'Você já é o responsável'
                             : ($current ? "Assumir tarefa (substituir {$current})" : 'Assumir tarefa');
                     })
                     ->icon('heroicon-m-user-plus')
                     ->color('primary')
-                    ->disabled(fn ($record) => $record->collaborator_id === Auth::id())
+                    ->disabled(fn ($record) => $record->collaborator_id === Collaborator::query()->where('user_id', Auth::id())->first()->id)
                     ->action(function ($record) {
-                        $record->update(['collaborator_id' => Auth::id()]);
+                        $record->update(['collaborator_id' => Collaborator::query()->where('user_id', Auth::id())->first()->id]);
                         Notification::make()
                             ->success()
                             ->title('Tarefa assumida')
