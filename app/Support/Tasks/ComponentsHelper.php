@@ -63,27 +63,27 @@ class ComponentsHelper
                     ->placeholder(__('modules.tasks.form.description.placeholder'))
                     ->required()
                     ->columnSpanFull()
-                    ->extraAttributes(['class' => 'min-h-[200px]']),
+                    ->extraInputAttributes(['style' => 'min-height: 20rem; max-height: 30vh; overflow-y: auto;']),
                 RichEditor::make('accept_criteria')
                     ->label(__('modules.tasks.form.accept_criteria.label'))
                     ->helperText(__('modules.tasks.form.accept_criteria.helpText'))
                     ->placeholder(__('modules.tasks.form.accept_criteria.placeholder'))
                     ->required()
                     ->columnSpanFull()
-                    ->extraAttributes(['class' => 'min-h-[200px]']),
+                    ->extraInputAttributes(['style' => 'min-height: 20rem; max-height: 30vh; overflow-y: auto;']),
                 RichEditor::make('scene_test')
                     ->label(__('modules.tasks.form.scene_test.label'))
                     ->helperText(__('modules.tasks.form.scene_test.helpText'))
                     ->placeholder(__('modules.tasks.form.scene_test.placeholder'))
                     ->required()
                     ->columnSpanFull()
-                    ->extraAttributes(['class' => 'min-h-[200px]']),
+                    ->extraInputAttributes(['style' => 'min-height: 20rem; max-height: 30vh; overflow-y: auto;']),
                 RichEditor::make('ovservations')
                     ->label(__('modules.tasks.form.ovservations.label'))
                     ->helperText(__('modules.tasks.form.ovservations.helpText'))
                     ->placeholder(__('modules.tasks.form.ovservations.placeholder'))
                     ->columnSpanFull()
-                    ->extraAttributes(['class' => 'min-h-[200px]']),
+                    ->extraInputAttributes(['style' => 'min-height: 20rem; max-height: 30vh; overflow-y: auto;']),
             ])
             ->columns(2)
             ->columnSpan(['md' => 12, 'xl' => 8, '2xl' => 7]);
