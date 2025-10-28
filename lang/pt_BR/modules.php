@@ -6,6 +6,7 @@ return [
     'tasks' => [
         'form' => [
             'title' => ['label'=>'Título', 'placeholder'=>'Ex: Implementar autenticação de usuários'],
+            'deadline' => ['label'=>'Data de Entrega'],
             'task' => ['label'=>'Tipo da Task'],
             'description' => [
                 'label'=>'✨ Descrição da Funcionalidade',

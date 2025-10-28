@@ -31,6 +31,7 @@ class Task extends Model
         'total_time_worked',
         'priority',
         'status',
+        'deadline'
     ];
 
     public function sprint()
@@ -169,6 +170,7 @@ class Task extends Model
         return [
             'type_task' => 'string',
             'priority' => 'string',
+            'deadline' => 'date',
         ];
     }
 }

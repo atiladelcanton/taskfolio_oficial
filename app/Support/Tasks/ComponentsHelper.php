@@ -10,7 +10,13 @@ use App\Enums\TaskStatusEnum;
 use App\Models\{Collaborator, Task, TaskTrackingTime};
 use Closure;
 use Filament\Actions\{Action, Action as ModalAction};
-use Filament\Forms\Components\{FileUpload, Repeater\TableColumn, RichEditor, Select, TextInput, ToggleButtons};
+use Filament\Forms\Components\{DatePicker,
+    FileUpload,
+    Repeater\TableColumn,
+    RichEditor,
+    Select,
+    TextInput,
+    ToggleButtons};
 use Filament\Infolists\Components\{RepeatableEntry, TextEntry};
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\{Grid, Section};
@@ -57,6 +63,8 @@ class ComponentsHelper
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
+                DatePicker::make('deadline')
+                    ->label(__('modules.tasks.form.deadline.label')),
                 RichEditor::make('description')
                     ->label(__('modules.tasks.form.description.label'))
                     ->helperText(__('modules.tasks.form.description.helpText'))
@@ -612,7 +620,7 @@ class ComponentsHelper
                     ->collapsible()
                     ->collapsed(true)
                     ->schema([
-                        TextEntry::make('scene_test')
+                        TextEntry::make('ovservations')
                             ->hiddenLabel(true)
                             ->markdown()
                             ->columnSpanFull(),
