@@ -17,7 +17,7 @@ class ProjectsTable
                 TextColumn::make('client.company_name')
                     ->sortable(),
 
-                TextColumn::make('payment_type')
+                TextColumn::make('paymentDays.payment_type')
                     ->label('Tipo de Pagamento')
                     ->badge()
                     ->color(fn ($state): string => match ($state) {
@@ -41,8 +41,9 @@ class ProjectsTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('payment_day')
+                TextColumn::make('paymentDays.payment_day')
                     ->label('Dia de Pagamento')
+                    ->badge()
                     ->searchable(),
                 TextColumn::make('status')
                     ->label('Status')

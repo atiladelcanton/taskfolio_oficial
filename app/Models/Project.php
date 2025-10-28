@@ -15,8 +15,6 @@ class Project extends Model
     protected $fillable = [
         'client_id',
         'project_name',
-        'payment_type',
-        'payment_day',
         'description',
         'status',
     ];
@@ -46,6 +44,10 @@ class Project extends Model
         return $this->hasMany(Sprint::class);
     }
 
+    public function paymentDays()
+    {
+        return $this->hasMany(ProjectPayment::class);
+    }
     public function monthlyPayments()
     {
         return $this->hasMany(MonthlyPayment::class);
