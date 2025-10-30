@@ -27,7 +27,6 @@ class EditCollaborator extends EditRecord
 
     protected function mutateFormDataBeforeSave(array $data): array
     {
-
         if (isset($data['user_type']) && $this->record->user) {
             $this->record->user->assignRole(UserTypeEnum::getRoleName($data['user_type']));
         }

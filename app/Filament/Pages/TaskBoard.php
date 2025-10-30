@@ -91,7 +91,7 @@ class TaskBoard extends BoardPage implements HasActions
     public function getEloquentQuery(): Builder
     {
         return Task::query()->with(['collaborator', 'activeTracking', 'evidences'])
-            ->whereNotIn('type_task', [TypeTaskEnum::EPIC->value,TypeTaskEnum::FEATURE->value]);
+            ->whereNotIn('type_task', [TypeTaskEnum::EPIC->value, TypeTaskEnum::FEATURE->value]);
     }
 
     protected function getHeaderActions(): array

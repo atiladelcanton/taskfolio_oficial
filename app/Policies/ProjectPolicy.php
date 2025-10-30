@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Project;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Project, User};
 
 class ProjectPolicy
 {
@@ -47,5 +47,4 @@ class ProjectPolicy
     {
         return $user->can('project.delete') && $this->view($user, $project);
     }
-
 }

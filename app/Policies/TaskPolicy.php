@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Task;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Task, User};
 
 class TaskPolicy
 {
@@ -47,6 +47,4 @@ class TaskPolicy
     {
         return $user->can('task.delete') && $this->view($user, $task);
     }
-
-
 }

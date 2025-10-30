@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\{Permission, Role};
+
 class RolesAndPermissionsSeeder extends Seeder
 {
     /**
@@ -34,7 +36,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'project.view', 'project.create', 'project.update', 'clieproject.delete',
 
             // Collaborators
-            'collaborator.view', 'collaborator.create', 'collaborator.update', 'collaborator.delete','collaborator.attach','collaborator.detach'
+            'collaborator.view', 'collaborator.create', 'collaborator.update', 'collaborator.delete', 'collaborator.attach', 'collaborator.detach',
         ];
 
         foreach ($permissions as $name) {
