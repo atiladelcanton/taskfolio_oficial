@@ -13,7 +13,6 @@ class CollaboratorsTable
 {
     public static function configure(Table $table): Table
     {
-
         return $table
             ->columns([
                 TextColumn::make('name')
@@ -55,10 +54,10 @@ class CollaboratorsTable
                 TextColumn::make('user.roles.name')
                     ->label('Grupos')
                     ->badge()
-                ->formatStateUsing(fn ($state): string => match ($state) {
-                    'COLLABORATOR' => 'Colaborador',
-                    'ADMINISTRADOR' => 'Administrador',
-                }),
+                    ->formatStateUsing(fn ($state): string => match ($state) {
+                        'COLLABORATOR' => 'Colaborador',
+                        'ADMINISTRADOR' => 'Administrador',
+                    }),
                 TextColumn::make('created_at')
                     ->dateTime('d/m/Y')
                     ->sortable()

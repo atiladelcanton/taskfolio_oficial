@@ -22,7 +22,6 @@ class EditProject extends EditRecord
 
     protected function afterSave(): void
     {
-
         $paymentDays = $this->data['paymentDays'];
         ProjectPayment::query()->where('project_id', $this->record->id)->delete();
         foreach ($paymentDays as $day) {

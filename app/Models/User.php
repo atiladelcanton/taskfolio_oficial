@@ -9,15 +9,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 use Yebor974\Filament\RenewPassword\Contracts\RenewPasswordContract;
 use Yebor974\Filament\RenewPassword\Traits\RenewPassword;
-use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable implements RenewPasswordContract
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
-    use Notifiable;
+
     use HasRoles;
+    use Notifiable;
     use RenewPassword;
 
     /**
@@ -72,7 +74,7 @@ class User extends Authenticatable implements RenewPasswordContract
     {
         static::creating(function ($user) {
             if (blank($user->password)) {
-                $user->password = \Hash::make(\Illuminate\Support\Str::random(16));
+                $user->password = \Hash::make(Str::random(16));
                 $user->force_renew_password = true;
             }
         });

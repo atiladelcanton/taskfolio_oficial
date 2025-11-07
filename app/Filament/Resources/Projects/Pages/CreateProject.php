@@ -11,9 +11,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateProject extends CreateRecord
 {
     protected static string $resource = ProjectResource::class;
+
     protected function afterCreate(): void
     {
-
         $paymentDays = $this->data['paymentDays'];
         foreach ($paymentDays as $day) {
             ProjectPayment::query()->create([
@@ -22,8 +22,8 @@ class CreateProject extends CreateRecord
                 'payment_day' => $day,
             ]);
         }
-
     }
+
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

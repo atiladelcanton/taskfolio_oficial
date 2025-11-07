@@ -395,14 +395,14 @@ class ComponentsHelper
             ->modalIcon('heroicon-m-clock')
             ->modalSubmitActionLabel(fn ($record) => $record->activeTracking ? 'Pausar' : 'Iniciar')
             ->modalCancelActionLabel('Fechar')
-            ->visible(fn($record) => $record->status === TaskStatusEnum::Doing->value)
+            ->visible(fn ($record) => $record->status === TaskStatusEnum::Doing->value)
 
             ->extraModalFooterActions([
                 ModalAction::make('assumir')
                     ->label(function ($record) {
                         $current = $record->collaborator->name ?? null;
 
-                        return $record->collaborator_id ===  Collaborator::query()->where('user_id', Auth::id())->first()->id
+                        return $record->collaborator_id === Collaborator::query()->where('user_id', Auth::id())->first()->id
                             ? 'Você já é o responsável'
                             : ($current ? "Assumir tarefa (substituir {$current})" : 'Assumir tarefa');
                     })
@@ -470,7 +470,7 @@ class ComponentsHelper
             })
             ->action(function ($record) {
                 $activeTracking = $record->activeTracking;
-                if($record->collaborator_id === Collaborator::query()->where('user_id', Auth::id())->first()->id) {
+                if ($record->collaborator_id === Collaborator::query()->where('user_id', Auth::id())->first()->id) {
                     if ($activeTracking) {
                         // PAUSAR
                         $activeTracking->update(['stop_at' => now()]);
@@ -486,9 +486,7 @@ class ComponentsHelper
                             ->title('Tempo pausado')
                             ->body("Sessão de {$duration}h registrada. Total acumulado: {$record->total_time_worked}h")
                             ->send();
-                    }
-                    else
-                    {
+                    } else {
                         // INICIAR
                         TaskTrackingTime::create([
                             'task_id' => $record->id,
@@ -503,14 +501,13 @@ class ComponentsHelper
                             ->body('Cronômetro em execução')
                             ->send();
                     }
-                }else{
+                } else {
                     Notification::make()
                         ->warning()
                         ->title('Ops!')
-                        ->body("Você so pode iniciar ou pausar uma tarefa que pertença a você!")
+                        ->body('Você so pode iniciar ou pausar uma tarefa que pertença a você!')
                         ->send();
                 }
-
             });
     }
 

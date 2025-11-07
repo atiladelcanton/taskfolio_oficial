@@ -48,6 +48,7 @@ class Project extends Model
     {
         return $this->hasMany(ProjectPayment::class);
     }
+
     public function monthlyPayments()
     {
         return $this->hasMany(MonthlyPayment::class);

@@ -47,13 +47,13 @@ class TasksTable
                     ->sortable()
                     ->weight('bold')
                     ->wrap()
-                    ->description(fn($record) => $record->description ? Str::limit(strip_tags($record->description), 80) : null),
+                    ->description(fn ($record) => $record->description ? Str::limit(strip_tags($record->description), 80) : null),
                 TextColumn::make('deadline')
                     ->label('Previsao')->date('d/m/Y'),
                 TextColumn::make('type_task')
                     ->label('Tipo')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'epic' => 'purple',
                         'feature' => 'success',
                         'task' => 'info',
@@ -61,7 +61,7 @@ class TasksTable
                         'improvement' => 'warning',
                         default => 'gray',
                     })
-                    ->icon(fn(string $state): string => match ($state) {
+                    ->icon(fn (string $state): string => match ($state) {
                         'epic' => 'heroicon-m-trophy',
                         'feature' => 'heroicon-m-sparkles',
                         'task' => 'heroicon-m-clipboard-document-list',
@@ -69,7 +69,7 @@ class TasksTable
                         'improvement' => 'heroicon-m-arrow-trending-up',
                         default => 'heroicon-m-question-mark-circle',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'epic' => 'Epic',
                         'feature' => 'Feature',
                         'task' => 'Task',
@@ -82,7 +82,7 @@ class TasksTable
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'backlog' => 'gray',
                         'refinement' => 'info',
                         'todo' => 'warning',
@@ -92,7 +92,7 @@ class TasksTable
                         'done' => 'success',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'backlog' => 'Backlog',
                         'refinement' => 'Refinamento',
                         'todo' => 'To Do',
@@ -107,21 +107,21 @@ class TasksTable
                 TextColumn::make('priority')
                     ->label('Prioridade')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'low' => 'gray',
                         'medium' => 'info',
                         'high' => 'warning',
                         'urgent' => 'danger',
                         default => 'gray',
                     })
-                    ->icon(fn(string $state): string => match ($state) {
+                    ->icon(fn (string $state): string => match ($state) {
                         'low' => 'heroicon-m-arrow-down',
                         'medium' => 'heroicon-m-minus',
                         'high' => 'heroicon-m-arrow-up',
                         'urgent' => 'heroicon-m-fire',
                         default => 'heroicon-m-flag',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'low' => 'Baixa',
                         'medium' => 'Média',
                         'high' => 'Alta',
@@ -170,7 +170,7 @@ class TasksTable
                 Group::make('type_task')
                     ->label('Tipo de Task')
                     ->collapsible()
-                    ->getTitleFromRecordUsing(fn($record) => match ($record->type_task) {
+                    ->getTitleFromRecordUsing(fn ($record) => match ($record->type_task) {
                         'epic' => '🎯 Epic',
                         'feature' => '⭐ Feature',
                         'task' => '📋 Task',
@@ -182,7 +182,7 @@ class TasksTable
                 Group::make('status')
                     ->label('Status')
                     ->collapsible()
-                    ->getTitleFromRecordUsing(fn($record) => match ($record->status) {
+                    ->getTitleFromRecordUsing(fn ($record) => match ($record->status) {
                         'backlog' => '📥 Backlog',
                         'refinement' => '🔍 Refinamento',
                         'todo' => '📝 To Do',
@@ -267,7 +267,7 @@ class TasksTable
                                     return $record->status->value;
                                 }
 
-                                return TaskStatusEnum::tryFrom((string)$record->status)?->value
+                                return TaskStatusEnum::tryFrom((string) $record->status)?->value
                                     ?? TaskStatusEnum::Backlog->value;
                             }),
                     ])

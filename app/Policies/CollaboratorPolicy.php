@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
-use App\Models\Collaborator;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use App\Models\{Collaborator, User};
 
 class CollaboratorPolicy
 {
@@ -13,7 +13,7 @@ class CollaboratorPolicy
      */
     public function viewAny(User $user): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 
     /**
@@ -21,7 +21,7 @@ class CollaboratorPolicy
      */
     public function view(User $user, Collaborator $collaborator): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 
     /**
@@ -29,7 +29,7 @@ class CollaboratorPolicy
      */
     public function create(User $user): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 
     /**
@@ -37,7 +37,7 @@ class CollaboratorPolicy
      */
     public function update(User $user, Collaborator $collaborator): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 
     /**
@@ -45,7 +45,7 @@ class CollaboratorPolicy
      */
     public function delete(User $user, Collaborator $collaborator): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 
     /**
@@ -53,7 +53,7 @@ class CollaboratorPolicy
      */
     public function attach(User $user, Collaborator $collaborator): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 
     /**
@@ -61,6 +61,6 @@ class CollaboratorPolicy
      */
     public function detach(User $user, Collaborator $collaborator): bool
     {
-         return $user->can('collaborator.view');
+        return $user->can('collaborator.view');
     }
 }

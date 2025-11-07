@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\TaskType;
-use App\Enums\TypeTaskEnum;
+use App\Enums\{TypeTaskEnum};
 use Database\Factories\TaskFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,7 +30,7 @@ class Task extends Model
         'total_time_worked',
         'priority',
         'status',
-        'deadline'
+        'deadline',
     ];
 
     public function sprint()
@@ -51,7 +50,7 @@ class Task extends Model
         return $this->belongsTo(self::class, 'parent_id');
     }
 
-    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany|Task
+    public function children(): \Illuminate\Database\Eloquent\Relations\HasMany|self
     {
         return $this->hasMany(self::class, 'parent_id');
     }

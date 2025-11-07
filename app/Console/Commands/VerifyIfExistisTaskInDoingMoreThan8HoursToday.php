@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Enums\TaskStatusEnum;
@@ -32,28 +34,28 @@ class VerifyIfExistisTaskInDoingMoreThan8HoursToday extends Command
         $tasks = Task::query()
             ->with([
                 'collaborator',
-                'trackingTimes' => function($query) {
+                'trackingTimes' => function ($query) {
                     $query->whereNotNull('start_at')
                         ->whereNull('stop_at');
-                }
+                },
             ])
             ->where('status', '=', TaskStatusEnum::Doing)
             ->get();
 
-        $tasks->each(function ($task){
-            $task->trackingTimes->each(function ($time) use ($task){
+        $tasks->each(function ($task) {
+            $task->trackingTimes->each(function ($time) use ($task) {
                 $now = Carbon::now();
                 $startAt = $time->start_at;
                 $diff = $startAt->diffInHours($now);
 
-                if($diff > 8){
+                if ($diff > 8) {
                     $time->stop_at = $now;
                     $time->save();
 
                     Notification::make()
                         ->warning()
-                        ->title("Tempo excedido")
-                        ->body("Colaborador ".$task->collaborator->name." sua tarefa foi pausada por exceder o limite de 8 horas no dia.")
+                        ->title('Tempo excedido')
+                        ->body('Colaborador '.$task->collaborator->name.' sua tarefa foi pausada por exceder o limite de 8 horas no dia.')
                         ->sendToDatabase($task->collaborator->user)->send();
                 }
             });
